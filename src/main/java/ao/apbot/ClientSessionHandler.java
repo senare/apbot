@@ -51,6 +51,8 @@ public class ClientSessionHandler extends IoHandlerAdapter {
                 log.info("{} failed to logon", handle);
                 break;
 
+            default:
+
             }
         } else {
             session.close(true);

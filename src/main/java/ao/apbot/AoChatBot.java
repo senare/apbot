@@ -15,14 +15,10 @@ import org.slf4j.LoggerFactory;
 
 import ao.apbot.codec.AoChatDecoder;
 import ao.apbot.codec.AoChatEncoder;
-import ao.protocol.packets.utils.PacketFactory;
-import ao.protocol.packets.utils.SimplePacketFactory;
 
 public class AoChatBot implements ProtocolCodecFactory {
 
     private static Logger log = LoggerFactory.getLogger(AoChatBot.class);
-
-    public static final PacketFactory packetFactory = new SimplePacketFactory();
 
     private String chatServerHost = "chat.d1.funcom.com";
     private int chatServerPort = 7105;
