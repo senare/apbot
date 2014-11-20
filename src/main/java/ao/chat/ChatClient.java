@@ -19,6 +19,11 @@
  */
 package ao.chat;
 
+import ao.protocol.auth.LoginKeyGenerator;
+import ao.protocol.auth.LoginOkPacket;
+import ao.protocol.auth.LoginRequestPacket;
+import ao.protocol.auth.LoginSeedPacket;
+import ao.protocol.auth.LoginSelectPacket;
 import ao.protocol.packets.utils.SimplePacketFactory;
 import ao.protocol.*;
 import ao.protocol.packets.Packet;
@@ -34,7 +39,9 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+
 import ao.event.EventListenerList;
+
 import java.util.ArrayList;
 
 public class ChatClient implements Client {

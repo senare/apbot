@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
-package ao.protocol.packets.toserver;
+package ao.protocol.auth;
 
 import ao.protocol.packets.*;
 import ao.protocol.packets.utils.PacketParser;
@@ -36,8 +36,8 @@ import java.io.IOException;
  *
  * @author Paul Smith
  * @see ao.protocol.packets.toclient.CharacterListPacket
- * @see ao.protocol.packets.toclient.LoginErrorPacket
- * @see ao.protocol.packets.toclient.LoginOkPacket
+ * @see ao.protocol.auth.LoginErrorPacket
+ * @see ao.protocol.auth.LoginOkPacket
  */
 public class LoginSelectPacket extends Packet {
     

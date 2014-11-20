@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
-package ao.protocol;
+package ao.protocol.auth;
 
 public class Tea {
 

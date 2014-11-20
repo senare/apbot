@@ -16,13 +16,18 @@ import org.apache.mina.transport.socket.nio.NioSocketConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ao.apbot.codec.AoChatDecoder;
 import ao.apbot.codec.XMLDecoder;
 import ao.apbot.codec.XMLEncoder;
+import ao.protocol.packets.utils.PacketFactory;
+import ao.protocol.packets.utils.SimplePacketFactory;
 
 public class BotFactory implements ProtocolCodecFactory {
 
 	private static Logger log = LoggerFactory.getLogger(BotFactory.class);
 
+	public static final PacketFactory packetFactory = new SimplePacketFactory();
+	
 	private String chatServerHost = "chat.d1.funcom.com";
 	private int chatServerPort = 7105;
 
@@ -76,15 +81,15 @@ public class BotFactory implements ProtocolCodecFactory {
 		log.info("Server connected {} ", handle);
 	}
 
-	private static final XMLEncoder XML_ENCODER = new XMLEncoder();
+	private static final XMLEncoder ENCODER = new XMLEncoder();
 
 	public ProtocolEncoder getEncoder(IoSession session) throws Exception {
-		return XML_ENCODER;
+		return ENCODER;
 	}
 
-	private static final XMLDecoder XML_DECODER = new XMLDecoder();
+	private static final AoChatDecoder DECODER = new AoChatDecoder();
 
 	public ProtocolDecoder getDecoder(IoSession session) throws Exception {
-		return XML_DECODER;
+		return DECODER;
 	}
 }

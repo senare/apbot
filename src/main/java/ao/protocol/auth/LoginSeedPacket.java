@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ao.protocol.packets.toclient;
+package ao.protocol.auth;
 
 import ao.protocol.packets.*;
 import ao.protocol.packets.utils.PacketParser;
@@ -36,7 +36,7 @@ import java.io.IOException;
  * <br>DIRECTION:   in</p>
  *
  * @author Paul Smith
- * @see ao.protocol.packets.toserver.LoginRequestPacket
+ * @see ao.protocol.auth.LoginRequestPacket
  */
 public class LoginSeedPacket extends Packet {
 

@@ -18,9 +18,10 @@
  * limitations under the License.
  */
 
-package ao.protocol;
+package ao.protocol.auth;
 
 import ao.misc.Convert;
+
 import java.math.BigInteger;
 import java.util.Random;
 

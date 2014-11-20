@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ao.protocol.packets.toclient;
+package ao.protocol.auth;
 
 import ao.protocol.packets.Packet;
 
@@ -30,8 +30,8 @@ import ao.protocol.packets.Packet;
  * <br>DIRECTION:   in</p>
  *
  * @author Paul Smith
- * @see ao.protocol.packets.toclient.LoginErrorPacket
- * @see ao.protocol.packets.toserver.LoginSelectPacket
+ * @see ao.protocol.auth.LoginErrorPacket
+ * @see ao.protocol.auth.LoginSelectPacket
  */
 public class LoginOkPacket extends Packet {
 

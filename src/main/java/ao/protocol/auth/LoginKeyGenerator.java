@@ -18,9 +18,11 @@
  * limitations under the License.
  */
 
-package ao.protocol;
+package ao.protocol.auth;
 
 import ao.misc.Convert;
+import ao.protocol.Client;
+
 import java.math.BigInteger;
 import java.util.Random;
 
@@ -41,15 +43,15 @@ import java.util.Random;
  * </ul></p>
  *
  * @see #generateLoginKey(String, String, String)
- * @see ao.protocol.packets.toclient.LoginSeedPacket 
- * @see ao.protocol.packets.toserver.LoginRequestPacket
+ * @see ao.protocol.auth.LoginSeedPacket 
+ * @see ao.protocol.auth.LoginRequestPacket
  * @see ao.protocol.Client#authenticate(String, String)
  */
 public class LoginKeyGenerator {
     
     /** 
      * A constant that is sent to the AO server when attempting to authenticate a bot/user.
-     * @see ao.protocol.packets.toserver.LoginRequestPacket 
+     * @see ao.protocol.auth.LoginRequestPacket 
      */
     public static int PROTOCOL_VERSION = 0;
     
@@ -78,8 +80,8 @@ public class LoginKeyGenerator {
      * @throws NullPointerException 
      *         if serverSeed, userName, or password are null
      *
-     * @see ao.protocol.packets.toclient.LoginSeedPacket 
-     * @see ao.protocol.packets.toserver.LoginRequestPacket
+     * @see ao.protocol.auth.LoginSeedPacket 
+     * @see ao.protocol.auth.LoginRequestPacket
      * @see ao.protocol.Client#authenticate(String, String)
      */
     public static String generateLoginKey(String serverSeed, String accountName, String password) {
@@ -107,8 +109,8 @@ public class LoginKeyGenerator {
      * @return 
      *        the generated encrypted login key
      *
-     * @see ao.protocol.packets.toclient.LoginSeedPacket 
-     * @see ao.protocol.packets.toclient.LoginRequestPacket
+     * @see ao.protocol.auth.LoginSeedPacket 
+     * @see ao.protocol.auth.LoginRequestPacket
      * @see ao.protocol.Client#authenticate(String, String)
      * @see #generateLocalSeed(int)
      * @see #generateLoginKey(String, String, String)
