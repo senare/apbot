@@ -1,49 +1,81 @@
 package ao.apbot;
 
 import org.apache.mina.core.service.IoHandlerAdapter;
+import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ao.protocol.auth.CharacterListPacket;
+import ao.protocol.auth.LoginErrorPacket;
 import ao.protocol.auth.LoginKeyGenerator;
+import ao.protocol.auth.LoginOkPacket;
 import ao.protocol.auth.LoginRequestPacket;
 import ao.protocol.auth.LoginSeedPacket;
+import ao.protocol.auth.LoginSelectPacket;
 import ao.protocol.packets.Packet;
+import ao.protocol.packets.Packet.Direction;
+import ao.protocol.packets.bi.PingPacket;
 
 public class ClientSessionHandler extends IoHandlerAdapter {
 
-	private final static Logger log = LoggerFactory.getLogger(ClientSessionHandler.class);
+    private final static Logger log = LoggerFactory.getLogger(ClientSessionHandler.class);
 
-	private String password;
-	private String username;
-	private String handle;
+    private String password;
+    private String username;
+    private String handle;
 
-	public ClientSessionHandler(String handle, String username, String password) {
-		this.handle = handle;
-		this.username = username;
-		this.password = password;
-	}
+    public ClientSessionHandler(String handle, String username, String password) {
+        this.handle = handle;
+        this.username = username;
+        this.password = password;
+    }
 
-	@Override
-	public void sessionOpened(IoSession session) {
-		log.info("{} connect", handle);
-	}
+    @Override
+    public void messageReceived(IoSession session, Object message) {
+        log.info("{} received {}", handle, message);
 
-	@Override
-	public void messageReceived(IoSession session, Object message) {
-		log.info("{} received {}", handle, message);
+        if (message instanceof Packet) {
+            Packet pkg = (Packet) message;
+            switch (pkg.getType()) {
+            case LoginSeedPacket.TYPE:
+                session.write(new LoginRequestPacket(LoginKeyGenerator.PROTOCOL_VERSION, username, LoginKeyGenerator.generateLoginKey(((LoginSeedPacket) message).getLoginSeed(), username, password)));
+                break;
+            case CharacterListPacket.TYPE:
+                session.write(new LoginSelectPacket(((CharacterListPacket) pkg).findCharacter(handle).getID()));
+                break;
+            case LoginOkPacket.TYPE:
+                log.info("{} has logged on", handle);
+                break;
+            case LoginErrorPacket.TYPE:
+                log.info("{} failed to logon", handle);
+                break;
 
-		if (message instanceof LoginSeedPacket) {
-			Packet packet = new LoginRequestPacket(LoginKeyGenerator.PROTOCOL_VERSION, username, LoginKeyGenerator.generateLoginKey(((LoginSeedPacket) message).getLoginSeed(), username, password));
-			session.write(packet);
-		} else {
-			session.close(true);
-		}
-	}
+            }
+        } else {
+            session.close(true);
+        }
+    }
 
-	@Override
-	public void exceptionCaught(IoSession session, Throwable cause) {
-		log.error("Client caught exception ", cause);
-		session.close(true);
-	}
+    @Override
+    public void sessionOpened(IoSession session) {
+        log.info("{} connect", handle);
+    }
+
+    @Override
+    public void messageSent(IoSession session, Object message) throws Exception {
+        log.info("{} sent {}", handle, message);
+    };
+
+    @Override
+    public void sessionIdle(IoSession session, IdleStatus status) throws Exception {
+        log.info("{} idle {}", handle, status);
+        session.write(new PingPacket("Java AOChat API ping", Direction.TO_SERVER));
+    }
+
+    @Override
+    public void exceptionCaught(IoSession session, Throwable cause) {
+        log.error("Client caught exception ", cause);
+        session.close(true);
+    }
 }

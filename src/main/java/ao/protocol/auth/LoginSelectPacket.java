@@ -35,7 +35,7 @@ import java.io.IOException;
  * <br>DIRECTION:   out</p>
  *
  * @author Paul Smith
- * @see ao.protocol.packets.toclient.CharacterListPacket
+ * @see ao.protocol.auth.CharacterListPacket
  * @see ao.protocol.auth.LoginErrorPacket
  * @see ao.protocol.auth.LoginOkPacket
  */

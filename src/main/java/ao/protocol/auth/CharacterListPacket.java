@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
-package ao.protocol.packets.toclient;
+package ao.protocol.auth;
 
 import ao.protocol.CharacterInfo;
 import ao.protocol.packets.*;

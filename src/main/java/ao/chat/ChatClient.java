@@ -19,6 +19,7 @@
  */
 package ao.chat;
 
+import ao.protocol.auth.CharacterListPacket;
 import ao.protocol.auth.LoginKeyGenerator;
 import ao.protocol.auth.LoginOkPacket;
 import ao.protocol.auth.LoginRequestPacket;

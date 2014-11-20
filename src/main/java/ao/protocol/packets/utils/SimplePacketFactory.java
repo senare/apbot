@@ -21,6 +21,7 @@
 package ao.protocol.packets.utils;
 
 import ao.db.MMDBDatabase;
+import ao.protocol.auth.CharacterListPacket;
 import ao.protocol.auth.LoginErrorPacket;
 import ao.protocol.auth.LoginOkPacket;
 import ao.protocol.auth.LoginRequestPacket;
