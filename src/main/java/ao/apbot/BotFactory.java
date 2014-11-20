@@ -28,13 +28,22 @@ public class BotFactory implements ProtocolCodecFactory {
 
 	private int chatClientPort = 10500;
 
+	private String handle;
+
+	private String username;
+
+	private String password;
+
 	public void spawnBot(String handle, String username, String password) throws Exception {
 		log.info("Spawn bot for {} login {} ", handle, username);
-		spawnServer(handle);
-		spawnClient(handle, username, password);
+		this.handle = handle;
+		this.username = username;
+		this.password = password;
+		spawnServer();
+		spawnClient();
 	}
 
-	public void spawnClient(String handle, String username, String password) throws Exception {
+	private void spawnClient() throws Exception {
 		NioSocketConnector connector = new NioSocketConnector();
 
 		connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(this));
@@ -56,7 +65,7 @@ public class BotFactory implements ProtocolCodecFactory {
 		}
 	}
 
-	public void spawnServer(String handle) throws Exception {
+	private void spawnServer() throws Exception {
 		IoAcceptor acceptor = new NioSocketAcceptor();
 		acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(this));
 		acceptor.setHandler(new ServerSessionHandler(handle));
