@@ -6,13 +6,13 @@ import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ao.apbot.codec.LoginKeyGenerator;
-import ao.protocol.auth.CharacterListPacket;
-import ao.protocol.auth.LoginErrorPacket;
-import ao.protocol.auth.LoginOkPacket;
-import ao.protocol.auth.LoginRequestPacket;
-import ao.protocol.auth.LoginSeedPacket;
-import ao.protocol.auth.LoginSelectPacket;
+import ao.apbot.drools.Fact;
+import ao.apbot.drools.facts.auth.CharacterListPacket;
+import ao.apbot.drools.facts.auth.LoginErrorPacket;
+import ao.apbot.drools.facts.auth.LoginOkPacket;
+import ao.apbot.drools.facts.auth.LoginRequestPacket;
+import ao.apbot.drools.facts.auth.LoginSeedPacket;
+import ao.apbot.drools.facts.auth.LoginSelectPacket;
 import ao.protocol.packets.Packet;
 import ao.protocol.packets.Packet.Direction;
 import ao.protocol.packets.bi.PingPacket;
@@ -35,14 +35,14 @@ public class ClientSessionHandler extends IoHandlerAdapter {
     public void messageReceived(IoSession session, Object message) {
         log.info("{} received {}", handle, message);
 
-        if (message instanceof Packet) {
-            Packet pkg = (Packet) message;
+        if (message instanceof Fact) {
+            Fact pkg = (Fact) message;
             switch (pkg.getType()) {
             case LoginSeedPacket.TYPE:
-                session.write(new LoginRequestPacket(LoginKeyGenerator.PROTOCOL_VERSION, username, LoginKeyGenerator.generateLoginKey(((LoginSeedPacket) message).getLoginSeed(), username, password)));
+                session.write(new LoginRequestPacket((LoginSeedPacket) pkg, username, password));
                 break;
             case CharacterListPacket.TYPE:
-                session.write(new LoginSelectPacket(((CharacterListPacket) pkg).findCharacter(handle).getID()));
+                session.write(new LoginSelectPacket((CharacterListPacket) pkg, handle));
                 break;
             case LoginOkPacket.TYPE:
                 log.info("{} has logged on", handle);
@@ -50,10 +50,10 @@ public class ClientSessionHandler extends IoHandlerAdapter {
             case LoginErrorPacket.TYPE:
                 log.info("{} failed to logon", handle);
                 break;
-
             default:
-
             }
+        } else if (message instanceof Packet) {
+            //TODO
         } else {
             session.close(true);
         }

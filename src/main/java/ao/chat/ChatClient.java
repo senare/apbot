@@ -19,19 +19,6 @@
  */
 package ao.chat;
 
-import ao.protocol.auth.CharacterListPacket;
-import ao.protocol.auth.LoginOkPacket;
-import ao.protocol.auth.LoginRequestPacket;
-import ao.protocol.auth.LoginSeedPacket;
-import ao.protocol.auth.LoginSelectPacket;
-import ao.protocol.packets.utils.SimplePacketFactory;
-import ao.protocol.*;
-import ao.protocol.packets.Packet;
-import ao.protocol.packets.bi.*;
-import ao.protocol.packets.toclient.*;
-import ao.protocol.packets.toserver.*;
-import ao.protocol.packets.utils.PacketFactory;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
@@ -39,11 +26,38 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.util.ArrayList;
 
 import ao.apbot.codec.LoginKeyGenerator;
 import ao.event.EventListenerList;
-
-import java.util.ArrayList;
+import ao.protocol.CharNotFoundException;
+import ao.protocol.CharacterIDTable;
+import ao.protocol.CharacterInfo;
+import ao.protocol.Client;
+import ao.protocol.ClientListener;
+import ao.protocol.ClientLogger;
+import ao.protocol.ClientStateException;
+import ao.protocol.DimensionAddress;
+import ao.protocol.GroupTable;
+import ao.protocol.PacketListener;
+import ao.protocol.packets.Packet;
+import ao.protocol.packets.bi.ChannelMessagePacket;
+import ao.protocol.packets.bi.CharacterLookupPacket;
+import ao.protocol.packets.bi.FriendRemovePacket;
+import ao.protocol.packets.bi.FriendUpdatePacket;
+import ao.protocol.packets.bi.PingPacket;
+import ao.protocol.packets.bi.PrivateChannelInvitePacket;
+import ao.protocol.packets.bi.PrivateChannelKickPacket;
+import ao.protocol.packets.bi.PrivateChannelMessagePacket;
+import ao.protocol.packets.bi.PrivateMessagePacket;
+import ao.protocol.packets.toclient.ChannelUpdatePacket;
+import ao.protocol.packets.toclient.CharacterUpdatePacket;
+import ao.protocol.packets.toserver.ChatCommandPacket;
+import ao.protocol.packets.toserver.PrivateChannelAcceptPacket;
+import ao.protocol.packets.toserver.PrivateChannelKickAllPacket;
+import ao.protocol.packets.toserver.PrivateChannelLeavePacket;
+import ao.protocol.packets.utils.PacketFactory;
+import ao.protocol.packets.utils.SimplePacketFactory;
 
 public class ChatClient implements Client {
 
@@ -283,8 +297,8 @@ public class ChatClient implements Client {
 
                     if (game == Game.AO) {
                         Packet packet = nextPacket();
-                        if (packet instanceof LoginSeedPacket) {
-                            m_loginSeed = ((LoginSeedPacket) packet).getLoginSeed();
+                        if (true) {
+//                            m_loginSeed = ((LoginSeedPacket) packet).getLoginSeed();
                             println("Connected");
                             fireConnected();
                         } else {
@@ -315,11 +329,12 @@ public class ChatClient implements Client {
             } else {
                 try {
                     String key = LoginKeyGenerator.generateLoginKey(m_loginSeed, accountName, password);
-                    Packet packet = new LoginRequestPacket(LoginKeyGenerator.PROTOCOL_VERSION, accountName, key);
+                    Packet packet = null;
+//                    = new LoginRequestPacket(LoginKeyGenerator.PROTOCOL_VERSION, accountName, key);
                     sendPacket(packet);
 
                     packet = nextPacket();
-                    if (packet instanceof CharacterListPacket) {
+                    if (true) {
                         m_state = ClientState.AUTHENTICATED;
                         println("Authenticated");
                         fireAuthenticated();
@@ -349,11 +364,11 @@ public class ChatClient implements Client {
                         "Character is null, unable to login", -1);
             } else {
                 try {
-                    Packet packet = new LoginSelectPacket(character.getID());
+                    Packet packet = null;// = new LoginSelectPacket(character.getID());
                     sendPacket(packet);
 
                     packet = nextPacket();
-                    if (packet instanceof LoginOkPacket) {
+                    if (true) {
                         m_state = ClientState.LOGGED_IN;
                         m_character = character;
 

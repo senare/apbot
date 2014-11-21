@@ -23,10 +23,6 @@ package ao.apbot.codec;
 import java.math.BigInteger;
 import java.util.Random;
 
-import ao.protocol.auth.LoginRequestPacket;
-import ao.protocol.auth.LoginSeedPacket;
-import ao.protocol.auth.Tea;
-
 /**
  * <p>
  * AOLoginKeyGenerator is a utilty class for generating the encrypted login keys
@@ -248,7 +244,7 @@ public class LoginKeyGenerator {
 				newBlock[1] ^= oldBlock[1];
 			} // end if
 
-			Tea.encrypt(newBlock, encryptionKeyInts);
+			encrypt(newBlock, encryptionKeyInts);
 
 			oldBlock[0] = newBlock[0];
 			oldBlock[1] = newBlock[1];
@@ -259,6 +255,37 @@ public class LoginKeyGenerator {
 		return encrypted;
 	} // end encrypt()
 
+	
+	
+    /**
+     * This function implements the 
+     * <a href="http://en.wikipedia.org/wiki/Tiny_Encryption_Algorithm">Tiny Encryption Algorithm (TEA)</a>
+     * to encrypt a 64 bit block of data using a 128 bit key.
+     *
+     * @param block
+     *        a two integer (64 bit) block to encrypt
+     * @param key
+     *        a four integer (128 bit) key to use in encrypting the block 
+     *
+     * @see <a href="http://en.wikipedia.org/wiki/Tiny_Encryption_Algorithm">Tiny Encryption Algorithm (TEA)</a>
+     */
+    public static void encrypt(int[] block, int[] key) {
+        int i = block[0];
+        int j = block[1];
+        int sum = 0;
+        int delta = 0x9e3779b9;
+
+        for (int k = 0; k < 32; ++k) {
+            sum += delta;
+            i += (j << 4 & 0xfffffff0) + key[0] ^ j + sum ^ (j >> 5 & 0x7ffffff) + key[1];
+            j += (i << 4 & 0xfffffff0) + key[2] ^ i + sum ^ (i >> 5 & 0x7ffffff) + key[3];
+        }   // end for
+
+        block[0] = i;
+        block[1] = j;
+    }   // end encrypt()
+
+    
 	/**
 	 * Generates a random sequence of {@code length} characters.
 	 *

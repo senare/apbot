@@ -2,7 +2,7 @@ package ao.apbot.drools.facts.auth;
 
 import org.apache.mina.core.buffer.IoBuffer;
 
-import ao.apbot.drools.facts.Fact;
+import ao.apbot.drools.Fact;
 
 /**
  * <p>
@@ -40,6 +40,6 @@ public class LoginSeedPacket extends Fact {
 
 	@Override
 	public String toString() {
-		return String.format("%s %s %s", super.toString(), this.getClass().getCanonicalName(), seed);
+		return String.format("%s [%s]", super.toString(), seed);
 	}
 }

@@ -21,16 +21,9 @@
 package ao.protocol.packets.utils;
 
 import ao.db.MMDBDatabase;
-import ao.protocol.auth.CharacterListPacket;
-import ao.protocol.auth.LoginErrorPacket;
-import ao.protocol.auth.LoginOkPacket;
-import ao.protocol.auth.LoginRequestPacket;
-import ao.protocol.auth.LoginSeedPacket;
-import ao.protocol.auth.LoginSelectPacket;
-import ao.protocol.packets.*;
-import ao.protocol.packets.toclient.*;
-import ao.protocol.packets.toserver.*;
-import ao.protocol.packets.bi.*;
+import ao.protocol.packets.MalformedPacketException;
+import ao.protocol.packets.Packet;
+import ao.protocol.packets.UnparsablePacket;
 
 /**
  * {@code SimplePacketFactory} is an implementation of 
@@ -56,70 +49,6 @@ public class SimplePacketFactory implements PacketFactory {
     }   // end SimplePacketFactory()
     
     public Packet toPacket(short type, byte[] data) throws MalformedPacketException {
-        switch (type) {
-            //Incoming Packets
-            case LoginSeedPacket.TYPE:
-                return new LoginSeedPacket(data);            // TYPE 0
-            case LoginOkPacket.TYPE:
-                return new LoginOkPacket();                   // TYPE 5
-            case LoginErrorPacket.TYPE:
-                return new LoginErrorPacket(data);            // TYPE 6
-            case CharacterListPacket.TYPE:
-                return new CharacterListPacket(data);              // TYPE 7
-            case CharacterUnknownPacket.TYPE:
-                return new CharacterUnknownPacket(data);         // TYPE 10
-            case SystemMessagePacket.TYPE:
-                return new SystemMessagePacket(data, database);            // TYPE 20
-            case VicinityMessagePacket.TYPE:
-                return new VicinityMessagePacket(data);       // TYPE 34
-            case BroadcastMessagePacket.TYPE:
-                return new BroadcastMessagePacket(data);   // TYPE 35
-            case SimpleSystemMessagePacket.TYPE:
-                return new SimpleSystemMessagePacket(data);         // TYPE 36
-            case CharacterUpdatePacket.TYPE:
-                return new CharacterUpdatePacket(data);            // TYPE 37
-            case PrivateChannelAcceptPacket.TYPE:
-                return new PrivateChannelAcceptPacket(data);         // TYPE 52
-            case PrivateChannelLeavePacket.TYPE:
-                return new PrivateChannelLeavePacket(data);         // TYPE 53
-            case PrivateChannelCharacterJoinPacket.TYPE:
-                return new PrivateChannelCharacterJoinPacket(data);         // TYPE 55
-            case PrivateChannelCharacterLeavePacket.TYPE:
-                return new PrivateChannelCharacterLeavePacket(data);         // TYPE 56
-            case ChannelUpdatePacket.TYPE:
-                return new ChannelUpdatePacket(data);         // TYPE 60
-
-            //Outgoing Packets
-            case LoginRequestPacket.TYPE:
-                return new LoginRequestPacket(data);          // TYPE 2
-            case LoginSelectPacket.TYPE:
-                return new LoginSelectPacket(data);           // TYPE 3
-            case ChatCommandPacket.TYPE:
-                return new ChatCommandPacket(data);    // TYPE 120
-
-            //Bidirectional Packets
-            case CharacterLookupPacket.TYPE:
-                return new CharacterLookupPacket(data, Packet.Direction.TO_CLIENT);    // TYPE 21
-            case PrivateMessagePacket.TYPE:
-                return new PrivateMessagePacket(data, Packet.Direction.TO_CLIENT);   // TYPE 30
-            case FriendUpdatePacket.TYPE:
-                return new FriendUpdatePacket(data, Packet.Direction.TO_CLIENT);          // TYPE 40
-            case FriendRemovePacket.TYPE:
-                return new FriendRemovePacket(data, Packet.Direction.TO_CLIENT);          // TYPE 41
-            case PrivateChannelInvitePacket.TYPE:
-                return new PrivateChannelInvitePacket(data, Packet.Direction.TO_CLIENT);    // TYPE 50
-            case PrivateChannelKickPacket.TYPE:
-                return new PrivateChannelKickPacket(data, Packet.Direction.TO_CLIENT);      // TYPE 51
-            case PrivateChannelMessagePacket.TYPE:
-                return new PrivateChannelMessagePacket(data, Packet.Direction.TO_CLIENT);    // TYPE 57
-            case ChannelMessagePacket.TYPE:
-                return new ChannelMessagePacket(data, database, Packet.Direction.TO_CLIENT);   // TYPE 65
-            case PingPacket.TYPE:
-                return new PingPacket(data, Packet.Direction.TO_CLIENT);   // TYPE 100
-                
-            //Unparsed Packets
-            default:
-                return new UnparsablePacket(type, data, Packet.Direction.TO_CLIENT);
-        }   // end switch
+        return new UnparsablePacket(type, data, Packet.Direction.TO_CLIENT);
     }   // end toPacket()
 }   // end class SimplePacketFactory

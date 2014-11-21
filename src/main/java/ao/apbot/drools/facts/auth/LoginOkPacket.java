@@ -17,48 +17,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ao.protocol.auth;
+package ao.apbot.drools.facts.auth;
 
-import ao.protocol.packets.Packet;
+import ao.apbot.drools.Fact;
 
 /**
- * <p>LoginOkPacket is sent from the AO server to the client
- * if the client was successfully logged in.</p>
+ * <p>
+ * LoginOkPacket is sent from the AO server to the client if the client was
+ * successfully logged in.
+ * </p>
  *
- * <p>PACKET TYPE: {@value #TYPE}
- * <br>FORMAT:      empty
- * <br>DIRECTION:   in</p>
+ * <p>
+ * PACKET TYPE: {@value #TYPE} <br>
+ * FORMAT: empty <br>
+ * DIRECTION: in
+ * </p>
  *
  * @author Paul Smith
  * @see ao.protocol.auth.LoginErrorPacket
  * @see ao.protocol.auth.LoginSelectPacket
  */
-public class LoginOkPacket extends Packet {
+public class LoginOkPacket extends Fact {
 
     public static final short TYPE = 5;
-    private final byte[] m_data = {};
 
-    /** Creates a new instance of LoginOkPacket */
     public LoginOkPacket() {
-    }   // end LoginOkPacket()
-
-    /** Always returns {@value #TYPE} */
-    public short getType() {
-        return TYPE;
+        super(TYPE);
     }
-
-    public byte[] getData() {
-        return m_data;
-    }
-
-    /** Always returns {@code Direction.TO_CLIENT} */
-    public Direction getDirection() {
-        return Direction.TO_CLIENT;
-    }
-
-    @Override
-    public String toString() {
-        return "[" + TYPE + "]LoginOkPacket";
-    }   // end toString()
-}   // end class LoginOkPacket
-
+}
