@@ -6,9 +6,9 @@ import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ao.apbot.codec.LoginKeyGenerator;
 import ao.protocol.auth.CharacterListPacket;
 import ao.protocol.auth.LoginErrorPacket;
-import ao.protocol.auth.LoginKeyGenerator;
 import ao.protocol.auth.LoginOkPacket;
 import ao.protocol.auth.LoginRequestPacket;
 import ao.protocol.auth.LoginSeedPacket;

@@ -20,7 +20,6 @@
 package ao.chat;
 
 import ao.protocol.auth.CharacterListPacket;
-import ao.protocol.auth.LoginKeyGenerator;
 import ao.protocol.auth.LoginOkPacket;
 import ao.protocol.auth.LoginRequestPacket;
 import ao.protocol.auth.LoginSeedPacket;
@@ -41,6 +40,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
+import ao.apbot.codec.LoginKeyGenerator;
 import ao.event.EventListenerList;
 
 import java.util.ArrayList;
