@@ -40,7 +40,7 @@ import ao.apbot.drools.Fact;
  * </p>
  *
  * @author Paul Smith
- * @see ao.protocol.packets.bi.ChannelMessagePacket
+ * @see ao.apbot.drools.facts.ChannelMessagePacket
  */
 public class ChannelUpdatePacket extends Fact {
 

@@ -10,16 +10,20 @@ import org.slf4j.LoggerFactory;
 import ao.apbot.drools.Fact;
 import ao.apbot.drools.UnparsablePacket;
 import ao.apbot.drools.facts.BroadcastMessagePacket;
+import ao.apbot.drools.facts.ChannelMessagePacket;
 import ao.apbot.drools.facts.ChannelUpdatePacket;
 import ao.apbot.drools.facts.CharacterLookupPacket;
 import ao.apbot.drools.facts.CharacterUnknownPacket;
 import ao.apbot.drools.facts.CharacterUpdatePacket;
 import ao.apbot.drools.facts.FriendRemovePacket;
+import ao.apbot.drools.facts.FriendUpdatePacket;
 import ao.apbot.drools.facts.PingPacket;
 import ao.apbot.drools.facts.PrivateChannelCharacterJoinPacket;
 import ao.apbot.drools.facts.PrivateChannelCharacterLeavePacket;
 import ao.apbot.drools.facts.PrivateChannelInvitePacket;
 import ao.apbot.drools.facts.PrivateChannelKickPacket;
+import ao.apbot.drools.facts.PrivateChannelMessagePacket;
+import ao.apbot.drools.facts.PrivateMessagePacket;
 import ao.apbot.drools.facts.SimpleSystemMessagePacket;
 import ao.apbot.drools.facts.SystemMessagePacket;
 import ao.apbot.drools.facts.VicinityMessagePacket;
@@ -27,10 +31,6 @@ import ao.apbot.drools.facts.auth.CharacterListPacket;
 import ao.apbot.drools.facts.auth.LoginErrorPacket;
 import ao.apbot.drools.facts.auth.LoginOkPacket;
 import ao.apbot.drools.facts.auth.LoginSeedPacket;
-import ao.protocol.packets.bi.ChannelMessagePacket;
-import ao.protocol.packets.bi.FriendUpdatePacket;
-import ao.protocol.packets.bi.PrivateChannelMessagePacket;
-import ao.protocol.packets.bi.PrivateMessagePacket;
 
 public class AoChatDecoder extends CumulativeProtocolDecoder {
 

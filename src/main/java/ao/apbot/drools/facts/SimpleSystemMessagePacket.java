@@ -36,7 +36,7 @@ import ao.apbot.drools.Fact;
  * </p>
  *
  * @author Paul Smith
- * @see ao.protocol.packets.bi.PrivateMessagePacket
+ * @see ao.apbot.drools.facts.PrivateMessagePacket
  * @see VicinityMessagePacket
  * @see BroadcastMessagePacket
  * @see SystemMessagePacket
