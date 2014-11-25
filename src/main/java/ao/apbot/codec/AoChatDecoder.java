@@ -8,10 +8,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ao.apbot.drools.Fact;
+import ao.apbot.drools.UnparsablePacket;
 import ao.apbot.drools.facts.BroadcastMessagePacket;
 import ao.apbot.drools.facts.ChannelUpdatePacket;
+import ao.apbot.drools.facts.CharacterLookupPacket;
+import ao.apbot.drools.facts.CharacterUnknownPacket;
+import ao.apbot.drools.facts.CharacterUpdatePacket;
+import ao.apbot.drools.facts.FriendRemovePacket;
+import ao.apbot.drools.facts.PingPacket;
 import ao.apbot.drools.facts.PrivateChannelCharacterJoinPacket;
 import ao.apbot.drools.facts.PrivateChannelCharacterLeavePacket;
+import ao.apbot.drools.facts.PrivateChannelInvitePacket;
+import ao.apbot.drools.facts.PrivateChannelKickPacket;
 import ao.apbot.drools.facts.SimpleSystemMessagePacket;
 import ao.apbot.drools.facts.SystemMessagePacket;
 import ao.apbot.drools.facts.VicinityMessagePacket;
@@ -19,21 +27,10 @@ import ao.apbot.drools.facts.auth.CharacterListPacket;
 import ao.apbot.drools.facts.auth.LoginErrorPacket;
 import ao.apbot.drools.facts.auth.LoginOkPacket;
 import ao.apbot.drools.facts.auth.LoginSeedPacket;
-import ao.db.MMDBDatabase;
-import ao.protocol.packets.MalformedPacketException;
-import ao.protocol.packets.Packet;
-import ao.protocol.packets.UnparsablePacket;
 import ao.protocol.packets.bi.ChannelMessagePacket;
-import ao.protocol.packets.bi.CharacterLookupPacket;
-import ao.protocol.packets.bi.FriendRemovePacket;
 import ao.protocol.packets.bi.FriendUpdatePacket;
-import ao.protocol.packets.bi.PingPacket;
-import ao.protocol.packets.bi.PrivateChannelInvitePacket;
-import ao.protocol.packets.bi.PrivateChannelKickPacket;
 import ao.protocol.packets.bi.PrivateChannelMessagePacket;
 import ao.protocol.packets.bi.PrivateMessagePacket;
-import ao.protocol.packets.toclient.CharacterUnknownPacket;
-import ao.protocol.packets.toclient.CharacterUpdatePacket;
 
 public class AoChatDecoder extends CumulativeProtocolDecoder {
 
@@ -50,21 +47,17 @@ public class AoChatDecoder extends CumulativeProtocolDecoder {
 
         try {
             short type = ioBuffer.getShort();
-            Fact packet = toPacket(type);
-            if (packet != null) {
+            Fact packet = packet(type);
+            if (!(packet instanceof UnparsablePacket)) {
                 short len = ioBuffer.getShort();
                 if (ioBuffer.remaining() < len) {
                     log.debug("Not enough bytes to read keep waiting...");
                     ioBuffer.position(startPosition);
                     return false;
                 }
-                packet.decode(ioBuffer);
-                decoderOutput.write(packet);
-            } else {
-                byte[] data = new byte[ioBuffer.getShort()];
-                ioBuffer.get(data);
-                decoderOutput.write(toPacket(type, data));
             }
+            packet.decode(ioBuffer);
+            decoderOutput.write(packet);
             return true;
         } catch (Exception x) {
             log.debug("Something went wrong rollback position");
@@ -73,7 +66,7 @@ public class AoChatDecoder extends CumulativeProtocolDecoder {
         }
     }
 
-    public Fact toPacket(short type) throws MalformedPacketException {
+    public Fact packet(short type) {
         switch (type) {
         case LoginSeedPacket.TYPE:
             return new LoginSeedPacket(); // TYPE 0
@@ -83,65 +76,45 @@ public class AoChatDecoder extends CumulativeProtocolDecoder {
             return new LoginErrorPacket(); // TYPE 6
         case CharacterListPacket.TYPE:
             return new CharacterListPacket(); // TYPE 7
+        case CharacterUnknownPacket.TYPE:
+            return new CharacterUnknownPacket(); // TYPE 10
         case SystemMessagePacket.TYPE:
             return new SystemMessagePacket(); // TYPE 20
+        case CharacterLookupPacket.TYPE:
+            return new CharacterLookupPacket(); // TYPE 21
+        case PrivateMessagePacket.TYPE:
+            return new PrivateMessagePacket(); // TYPE 30
         case VicinityMessagePacket.TYPE:
             return new VicinityMessagePacket(); // TYPE 34
         case BroadcastMessagePacket.TYPE:
             return new BroadcastMessagePacket(); // TYPE 35
         case SimpleSystemMessagePacket.TYPE:
             return new SimpleSystemMessagePacket(); // TYPE 36
+        case CharacterUpdatePacket.TYPE:
+            return new CharacterUpdatePacket(); // TYPE 37
+        case FriendUpdatePacket.TYPE:
+            return new FriendUpdatePacket(); // TYPE 40
+        case FriendRemovePacket.TYPE:
+            return new FriendRemovePacket(); // TYPE 41
+        case PrivateChannelInvitePacket.TYPE:
+            return new PrivateChannelInvitePacket(); // TYPE 50
+        case PrivateChannelKickPacket.TYPE:
+            return new PrivateChannelKickPacket(); // TYPE 51
         case PrivateChannelCharacterJoinPacket.TYPE:
             return new PrivateChannelCharacterJoinPacket(); // TYPE 55
         case PrivateChannelCharacterLeavePacket.TYPE:
             return new PrivateChannelCharacterLeavePacket(); // TYPE 56
+        case PrivateChannelMessagePacket.TYPE:
+            return new PrivateChannelMessagePacket(); // TYPE 57
         case ChannelUpdatePacket.TYPE:
             return new ChannelUpdatePacket(); // TYPE 60
-        }
-
-        return null;
-    }
-
-    public Packet toPacket(short type, byte[] data) throws MalformedPacketException {
-        MMDBDatabase database = null;
-
-        switch (type) {
-        // Incoming Packets
-        case CharacterUnknownPacket.TYPE:
-            return new CharacterUnknownPacket(data); // TYPE 10
-        case CharacterUpdatePacket.TYPE:
-            return new CharacterUpdatePacket(data); // TYPE 37
-
-            // Bidirectional Packets
-        case CharacterLookupPacket.TYPE:
-            return new CharacterLookupPacket(data, Packet.Direction.TO_CLIENT); // TYPE
-                                                                                // 21
-        case PrivateMessagePacket.TYPE:
-            return new PrivateMessagePacket(data, Packet.Direction.TO_CLIENT); // TYPE
-                                                                               // 30
-        case FriendUpdatePacket.TYPE:
-            return new FriendUpdatePacket(data, Packet.Direction.TO_CLIENT); // TYPE
-                                                                             // 40
-        case FriendRemovePacket.TYPE:
-            return new FriendRemovePacket(data, Packet.Direction.TO_CLIENT); // TYPE
-                                                                             // 41
-        case PrivateChannelInvitePacket.TYPE:
-            return new PrivateChannelInvitePacket(data, Packet.Direction.TO_CLIENT); // TYPE
-                                                                                     // 50
-        case PrivateChannelKickPacket.TYPE:
-            return new PrivateChannelKickPacket(data, Packet.Direction.TO_CLIENT); // TYPE
-                                                                                   // 51
-        case PrivateChannelMessagePacket.TYPE:
-            return new PrivateChannelMessagePacket(data, Packet.Direction.TO_CLIENT); // TYPE
-                                                                                      // 57
         case ChannelMessagePacket.TYPE:
-            return new ChannelMessagePacket(data, database, Packet.Direction.TO_CLIENT); // TYPE
-                                                                                         // 65
+            return new ChannelMessagePacket(); // TYPE 65
         case PingPacket.TYPE:
-            return new PingPacket(data, Packet.Direction.TO_CLIENT); // TYPE 100
+            return new PingPacket(); // TYPE 100
 
         default:
-            return new UnparsablePacket(type, data, Packet.Direction.TO_CLIENT);
+            return new UnparsablePacket(type);
         }
     }
 }

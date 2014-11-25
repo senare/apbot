@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ao.apbot.drools.Fact;
+import ao.apbot.drools.facts.PingPacket;
 import ao.apbot.drools.facts.auth.CharacterListPacket;
 import ao.apbot.drools.facts.auth.LoginErrorPacket;
 import ao.apbot.drools.facts.auth.LoginOkPacket;
@@ -14,8 +15,6 @@ import ao.apbot.drools.facts.auth.LoginRequestPacket;
 import ao.apbot.drools.facts.auth.LoginSeedPacket;
 import ao.apbot.drools.facts.auth.LoginSelectPacket;
 import ao.protocol.packets.Packet;
-import ao.protocol.packets.Packet.Direction;
-import ao.protocol.packets.bi.PingPacket;
 
 public class ClientSessionHandler extends IoHandlerAdapter {
 
@@ -38,6 +37,9 @@ public class ClientSessionHandler extends IoHandlerAdapter {
         if (message instanceof Fact) {
             Fact pkg = (Fact) message;
             switch (pkg.getType()) {
+            case PingPacket.TYPE:
+                session.write(new PingPacket(((PingPacket) pkg).getMessage()));
+                break;
             case LoginSeedPacket.TYPE:
                 session.write(new LoginRequestPacket((LoginSeedPacket) pkg, username, password));
                 break;
@@ -53,7 +55,7 @@ public class ClientSessionHandler extends IoHandlerAdapter {
             default:
             }
         } else if (message instanceof Packet) {
-            //TODO
+            // TODO
         } else {
             session.close(true);
         }
@@ -72,7 +74,7 @@ public class ClientSessionHandler extends IoHandlerAdapter {
     @Override
     public void sessionIdle(IoSession session, IdleStatus status) throws Exception {
         log.info("{} idle {}", handle, status);
-        session.write(new PingPacket("Java AOChat API ping", Direction.TO_SERVER));
+        session.write(new PingPacket("Java AOChat API ping"));
     }
 
     @Override

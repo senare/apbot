@@ -1,9 +1,9 @@
 /*
- * ServerLogger.java
+ * UnparsablePacket.java
  *
- * Created on June 22, 2011
+ * Created on May 13, 2007, 12:40 PM
  *************************************************************************
- * Copyright 2011 Kevin Kendall
+ * Copyright 2008 Paul Smith
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,18 +18,27 @@
  * limitations under the License.
  */
 
-package ao.protocol;
+package ao.apbot.drools;
 
-import ao.chat.ServerConnection;
-import java.util.EventListener;
+import org.apache.mina.core.buffer.IoBuffer;
 
 /**
- * ServerLogger provides functionality for receiving log data from a server connection.
+ * AOUnparsablePacket is used to encapsulate packet data that could not
+ * successfully be parsed for whatever reason.
  *
- * @author Kevin Kendall
- * @see ao.protocol.Client
+ * @author Paul Smith
  */
-public interface ServerLogger extends EventListener {
-    /** Prints a string. */
-    void print(ServerConnection con, String msg);
-}   // end interface BotLogger
+public class UnparsablePacket extends Fact {
+
+    private byte[] data;
+
+    public UnparsablePacket(short type) {
+        super(type);
+    }
+
+    @Override
+    public void decode(IoBuffer buff) {
+        this.data = new byte[buff.getShort()];
+        buff.get(data);
+    }
+}
