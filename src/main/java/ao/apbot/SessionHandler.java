@@ -3,6 +3,9 @@ package ao.apbot;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
+import org.kie.api.KieServices;
+import org.kie.api.runtime.KieContainer;
+import org.kie.api.runtime.KieSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,15 +26,22 @@ public class SessionHandler extends IoHandlerAdapter {
 	private String username;
 	private String handle;
 
+	private KieContainer kc;
+
 	public SessionHandler(String handle, String username, String password) {
 		this.handle = handle;
 		this.username = username;
 		this.password = password;
+
+		KieServices ks = KieServices.Factory.get();
+		this.kc = ks.getKieClasspathContainer();
 	}
 
 	@Override
 	public void messageReceived(IoSession session, Object message) {
 		log.info("{} received {}", handle, message);
+
+		KieSession ksession = kc.newKieSession("APbotSession");
 
 		if (message instanceof Fact) {
 			Fact pkg = (Fact) message;
@@ -52,6 +62,9 @@ public class SessionHandler extends IoHandlerAdapter {
 				log.info("{} failed to logon", handle);
 				break;
 			default:
+				ksession.insert(message);
+				ksession.fireAllRules();
+				ksession.dispose();
 			}
 		} else {
 			session.close(true);
