@@ -1,29 +1,27 @@
-//created on: 2014-nov-25
 package apbot
+
+import ao.apbot.codec.Fact;
+import ao.apbot.pkg.*;
+
+dialect  "mvel"
 
 //list any import classes here.
 
-
-
 //declare any global variables here
 
-
-
-
-rule "Your First Rule"
+rule "ChannelUpdatePacket"
 
     when
-        //conditions
+        pkg : ChannelUpdatePacket()
     then
-        //actions
-
+  		System.out.println( "ChannelUpdatePacket" );
 end
 
-rule "Your Second Rule"
+rule "FriendUpdatePacket"
     //include attributes such as "salience" here...
     when
-        //conditions
+        pkg :FriendUpdatePacket ()
     then
-        //actions
+  		System.out.println( "FriendUpdatePacket" );
 
 end

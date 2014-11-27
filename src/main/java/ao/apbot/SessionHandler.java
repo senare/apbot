@@ -62,7 +62,7 @@ public class SessionHandler extends IoHandlerAdapter {
 				log.info("{} failed to logon", handle);
 				break;
 			default:
-				ksession.insert(message);
+				ksession.insert(pkg);
 				ksession.fireAllRules();
 				ksession.dispose();
 			}
