@@ -1,0 +1,17 @@
+package apbot
+
+import java.util.Calendar;
+import ao.apbot.pkg.*;
+
+dialect  "mvel"
+
+global org.apache.mina.core.session.IoSession session
+
+rule "Time command"
+
+    when
+        pkg : MsgPacket(msg matches "^!time")
+        time : TimeFact()
+    then
+  		session.write(pkg.getReplay(time.toString()));
+end

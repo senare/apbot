@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
-package ao.apbot.pkg;
+package ao.apbot.pkg.auth;
 
 import org.apache.mina.core.buffer.IoBuffer;
 

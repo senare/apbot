@@ -1,5 +1,7 @@
 package ao.apbot;
 
+import java.util.Calendar;
+
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
@@ -10,13 +12,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ao.apbot.codec.Fact;
-import ao.apbot.pkg.PingPacket;
+import ao.apbot.codec.TimeFact;
 import ao.apbot.pkg.auth.CharacterListPacket;
 import ao.apbot.pkg.auth.LoginErrorPacket;
 import ao.apbot.pkg.auth.LoginOkPacket;
 import ao.apbot.pkg.auth.LoginRequestPacket;
 import ao.apbot.pkg.auth.LoginSeedPacket;
 import ao.apbot.pkg.auth.LoginSelectPacket;
+import ao.apbot.pkg.auth.PingPacket;
 
 public class SessionHandler extends IoHandlerAdapter {
 
@@ -41,8 +44,6 @@ public class SessionHandler extends IoHandlerAdapter {
 	public void messageReceived(IoSession session, Object message) {
 		log.info("{} received {}", handle, message);
 
-		KieSession ksession = kc.newKieSession("APbotSession");
-
 		if (message instanceof Fact) {
 			Fact pkg = (Fact) message;
 			switch (pkg.getType()) {
@@ -62,6 +63,12 @@ public class SessionHandler extends IoHandlerAdapter {
 				log.info("{} failed to logon", handle);
 				break;
 			default:
+				KieSession ksession = kc.newKieSession("APbotSession");
+
+				// map for all bot's, or something ??
+				ksession.setGlobal("session", session);
+
+				ksession.insert(new TimeFact(Calendar.getInstance()));
 				ksession.insert(pkg);
 				ksession.fireAllRules();
 				ksession.dispose();

@@ -28,7 +28,6 @@ import ao.apbot.pkg.CharacterUnknownPacket;
 import ao.apbot.pkg.CharacterUpdatePacket;
 import ao.apbot.pkg.FriendRemovePacket;
 import ao.apbot.pkg.FriendUpdatePacket;
-import ao.apbot.pkg.PingPacket;
 import ao.apbot.pkg.PrivateChannelCharacterJoinPacket;
 import ao.apbot.pkg.PrivateChannelCharacterLeavePacket;
 import ao.apbot.pkg.PrivateChannelInvitePacket;
@@ -42,6 +41,7 @@ import ao.apbot.pkg.auth.CharacterListPacket;
 import ao.apbot.pkg.auth.LoginErrorPacket;
 import ao.apbot.pkg.auth.LoginOkPacket;
 import ao.apbot.pkg.auth.LoginSeedPacket;
+import ao.apbot.pkg.auth.PingPacket;
 
 public class AoChatBot implements ProtocolCodecFactory {
 

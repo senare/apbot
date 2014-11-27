@@ -22,9 +22,9 @@ package ao.apbot.pkg;
 
 import org.apache.mina.core.buffer.IoBuffer;
 
-import ao.apbot.codec.Fact;
+import ao.apbot.codec.MsgPacket;
 
-public class PrivateChannelMessagePacket extends Fact {
+public class PrivateChannelMessagePacket extends MsgPacket {
 
 	public static final short TYPE = 57;
 
@@ -77,5 +77,10 @@ public class PrivateChannelMessagePacket extends Fact {
 	@Override
 	public String toString() {
 		return String.format("%s %s Group[%s] Id[%s] ", super.toString(), msg, groupId, characterId);
+	}
+
+	@Override
+	public MsgPacket getReply(String msg) {
+		return new PrivateChannelMessagePacket(groupId, msg);
 	}
 }

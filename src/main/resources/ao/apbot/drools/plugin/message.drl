@@ -1,13 +1,10 @@
 package apbot
 
-import ao.apbot.codec.Fact;
 import ao.apbot.pkg.*;
 
 dialect  "mvel"
 
-//list any import classes here.
-
-//declare any global variables here
+global org.apache.mina.core.session.IoSession session
 
 rule "ChannelUpdatePacket"
 
@@ -18,7 +15,7 @@ rule "ChannelUpdatePacket"
 end
 
 rule "FriendUpdatePacket"
-    //include attributes such as "salience" here...
+
     when
         pkg :FriendUpdatePacket ()
     then

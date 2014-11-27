@@ -23,6 +23,7 @@ package ao.apbot.pkg;
 import org.apache.mina.core.buffer.IoBuffer;
 
 import ao.apbot.codec.Fact;
+import ao.apbot.codec.MsgPacket;
 
 /**
  * <p>
@@ -43,7 +44,7 @@ import ao.apbot.codec.Fact;
  *
  * @author Paul Smith
  */
-public class PrivateMessagePacket extends Fact {
+public class PrivateMessagePacket extends MsgPacket {
 
 	public static final short TYPE = 30;
 
@@ -90,6 +91,11 @@ public class PrivateMessagePacket extends Fact {
 	@Override
 	public String toString() {
 		return String.format("%s %s id[%s] ", super.toString(), msg, characterId);
+	}
+
+	@Override
+	public MsgPacket getReply(String msg) {
+		return new PrivateMessagePacket(characterId, msg);
 	}
 
 }
