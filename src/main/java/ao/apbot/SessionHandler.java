@@ -68,10 +68,7 @@ public class SessionHandler extends IoHandlerAdapter {
                 // map for all bot's, or something ??
                 ksession.setGlobal("session", session);
 
-                Calendar now = Calendar.getInstance();
-                now.set(Calendar.DAY_OF_MONTH, 24);
-                now.set(Calendar.MONTH,Calendar.DECEMBER);
-                ksession.insert(new TimeFact(now));
+                ksession.insert(new TimeFact(Calendar.getInstance()));
                 ksession.insert(pkg);
                 ksession.fireAllRules();
                 ksession.dispose();
