@@ -22,6 +22,7 @@
 		<slf4j.version>1.7.7</slf4j.version>
 		<drools.version>6.2.0.CR2</drools.version>
 		<junit.version>4.11</junit.version>
+		<ao.apbot.version>0.0.2-SNAPSHOT</ao.apbot.version>
 	</properties>
 	
 	<build>
