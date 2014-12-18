@@ -3,15 +3,14 @@
 	<persistence-unit name="ao.apbot.orm">
 		<description></description>
 
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+      	<jta-data-source>java:jboss/datasource/apbot</jta-data-source>
+
+		<class>ao.apbot.domain.Bot</class>
 		<class>ao.apbot.domain.Employee</class>
 		<class>ao.apbot.domain.Department</class>
 
 		<properties>
-			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
-			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/test-bot" />
-			<property name="javax.persistence.jdbc.user" value="admin" />
-			<property name="javax.persistence.jdbc.password" value="admin4you" />
-
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
 			<property name="hibernate.show_sql" value="true" />
 			<property name="hibernate.format_sql" value="true" />
