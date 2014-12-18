@@ -4,7 +4,7 @@
 		<description></description>
 
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
-      	<jta-data-source>java:jboss/datasource/apbot</jta-data-source>
+      	<jta-data-source>java:/jdbc/apbot-stage</jta-data-source>
 
 		<class>ao.apbot.domain.Bot</class>
 		<class>ao.apbot.domain.Employee</class>
