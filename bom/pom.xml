@@ -22,22 +22,53 @@
 		<dependency>
 			<groupId>ao.apbot</groupId>
 			<artifactId>com-core</artifactId>
-			<version>${ao.apbot.version}</version>
+			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>ao.apbot</groupId>
 			<artifactId>dao-orm</artifactId>
-			<version>${ao.apbot.version}</version>
+			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>ao.apbot</groupId>
 			<artifactId>rules</artifactId>
-			<version>${ao.apbot.version}</version>
+			<version>0.0.2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+			<version>1.1.2</version>
 		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifestEntries>
+							<Dependencies>org.slf4j</Dependencies>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.wildfly.plugins</groupId>
 				<artifactId>wildfly-maven-plugin</artifactId>

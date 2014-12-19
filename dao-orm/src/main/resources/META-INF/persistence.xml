@@ -3,7 +3,7 @@
 	<persistence-unit name="ao.apbot.orm">
 		<description></description>
 
-		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
       	<jta-data-source>java:/jdbc/apbot-stage</jta-data-source>
 
 		<class>ao.apbot.domain.Bot</class>
@@ -14,7 +14,7 @@
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
 			<property name="hibernate.show_sql" value="true" />
 			<property name="hibernate.format_sql" value="true" />
-			<property name="hibernate.hbm2ddl.auto" value="create" />
+			<property name="hibernate.hbm2ddl.auto" value="update" />
 
 			<!-- JDBC connection pool (use the built-in) -->
 			<property name="connection.pool_size" value="1" />

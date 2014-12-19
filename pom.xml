@@ -24,7 +24,17 @@
 		<junit.version>4.11</junit.version>
 		<ao.apbot.version>0.0.2-SNAPSHOT</ao.apbot.version>
 	</properties>
-	
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.jboss.spec</groupId>
+				<artifactId>jboss-javaee-7.0</artifactId>
+				<version>1.0.0.Final</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<build>
 		<plugins>
 			<plugin>

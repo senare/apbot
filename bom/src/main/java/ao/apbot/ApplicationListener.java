@@ -1,5 +1,6 @@
 package ao.apbot;
 
+import javax.inject.Inject;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
@@ -15,18 +16,23 @@ public class ApplicationListener implements ServletContextListener {
 
 	private static AoChatBot botFactory = new AoChatBot();
 
+	@Inject
+	private BotManager botManager;
+
 	@Override
-	public void contextDestroyed(ServletContextEvent arg0) {
-		for (Bot bot : BotManager.getBots()) {
-			try {
+	public void contextInitialized(ServletContextEvent arg0) {
+		log.info("Starting A perfect bot ...");
+
+		try {
+			for (Bot bot : botManager.getBots()) {
 				botFactory.spawn(bot.getName(), bot.getUser(), bot.getPassword());
-			} catch (Exception x) {
-				log.error("Failed to start apbot", x);
 			}
+		} catch (Exception x) {
+			log.error("Failed to start apbot", x);
 		}
 	}
 
 	@Override
-	public void contextInitialized(ServletContextEvent arg0) {
+	public void contextDestroyed(ServletContextEvent arg0) {
 	}
 }
