@@ -15,6 +15,8 @@ public class Bot {
 	private String user;
 	private String password;
 
+	private boolean active = false;
+	
 	public Bot() {
 	}
 
@@ -62,4 +64,12 @@ public class Bot {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}	
 }

@@ -25,7 +25,9 @@ public class ApplicationListener implements ServletContextListener {
 
 		try {
 			for (Bot bot : botManager.getBots()) {
-				botFactory.spawn(bot.getName(), bot.getUser(), bot.getPassword());
+				if (bot.isActive()) {
+					botFactory.spawn(bot.getName(), bot.getUser(), bot.getPassword());
+				}
 			}
 		} catch (Exception x) {
 			log.error("Failed to start apbot", x);
