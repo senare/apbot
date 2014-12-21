@@ -83,7 +83,6 @@
 				</executions>
 				<configuration>
 					<hostname>${wildfly-hostname}</hostname>
-					<port>${wildfly-port}</port>
 					<username>${wildfly-username}</username>
 					<password>${wildfly-password}</password>
 				</configuration>
