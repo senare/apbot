@@ -1,7 +1,5 @@
 package ao.apbot;
 
-import static org.junit.Assert.*;
-
 import org.apache.mina.core.session.IoSession;
 import org.junit.Test;
 

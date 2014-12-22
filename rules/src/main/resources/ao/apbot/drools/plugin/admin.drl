@@ -6,7 +6,7 @@ import ao.apbot.pkg.*;
 import ao.apbot.*;
 
 global org.apache.mina.core.session.IoSession session;
-global ao.apbot.AoChatBot aochatbot;
+global ao.apbot.AoChatBot manager;
 
 dialect  "mvel"
 
