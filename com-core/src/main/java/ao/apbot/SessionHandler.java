@@ -6,6 +6,8 @@ import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 import org.kie.api.KieServices;
+import org.kie.api.builder.Message;
+import org.kie.api.builder.Results;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.slf4j.Logger;
@@ -42,6 +44,11 @@ public class SessionHandler extends IoHandlerAdapter {
 
 		KieServices ks = KieServices.Factory.get();
 		this.kc = ks.getKieClasspathContainer();
+
+		Results results = this.kc.verify();
+		for (Message msg : results.getMessages()) {
+			log.info(msg.toString() + "  " + msg.getText());
+		}
 	}
 
 	@Override
