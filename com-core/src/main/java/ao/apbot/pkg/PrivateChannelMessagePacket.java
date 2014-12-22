@@ -78,9 +78,4 @@ public class PrivateChannelMessagePacket extends MsgPacket {
 	public String toString() {
 		return String.format("%s %s Group[%s] Id[%s] ", super.toString(), msg, groupId, characterId);
 	}
-
-	@Override
-	public MsgPacket getReply(String msg) {
-		return new PrivateChannelMessagePacket(groupId, msg);
-	}
 }

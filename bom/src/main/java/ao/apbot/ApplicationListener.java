@@ -22,13 +22,8 @@ public class ApplicationListener implements ServletContextListener {
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
 		log.info("Starting A perfect bot ...");
-
 		try {
-			for (Bot bot : botManager.getBots()) {
-				if (bot.isActive()) {
-					botFactory.spawn(bot.getName(), bot.getUser(), bot.getPassword());
-				}
-			}
+			botFactory.spawn(botManager);
 		} catch (Exception x) {
 			log.error("Failed to start apbot", x);
 		}

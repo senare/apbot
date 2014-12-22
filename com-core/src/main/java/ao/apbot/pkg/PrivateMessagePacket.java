@@ -22,7 +22,6 @@ package ao.apbot.pkg;
 
 import org.apache.mina.core.buffer.IoBuffer;
 
-import ao.apbot.codec.Fact;
 import ao.apbot.codec.MsgPacket;
 
 /**
@@ -92,10 +91,4 @@ public class PrivateMessagePacket extends MsgPacket {
 	public String toString() {
 		return String.format("%s %s id[%s] ", super.toString(), msg, characterId);
 	}
-
-	@Override
-	public MsgPacket getReply(String msg) {
-		return new PrivateMessagePacket(characterId, msg);
-	}
-
 }

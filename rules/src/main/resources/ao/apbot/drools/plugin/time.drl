@@ -5,6 +5,8 @@ import ao.apbot.codec.*;
 import ao.apbot.pkg.*;
 
 global org.apache.mina.core.session.IoSession session
+global ao.apbot.AoChatBot aoChatBot
+
 
 dialect  "mvel"
 
@@ -13,7 +15,7 @@ rule "Time command"
 	salience -100
 
     when
-        pkg : MsgPacket(msg matches "^!time")
+        pkg : MsgPacket(command matches "time")
         time : TimeFact()
     then
   		session.write(pkg.getReply(time.toString()));

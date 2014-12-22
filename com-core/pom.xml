@@ -15,6 +15,10 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>ao.apbot</groupId>
+			<artifactId>dao-orm</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.mina</groupId>
 			<artifactId>mina-core</artifactId>
 			<version>${mina.version}</version>
@@ -108,17 +112,7 @@
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
 				</configuration>
-				<!-- 
-				<executions>
-					<execution>
-						<id>make-assembly</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
-				 -->
+				<!-- <executions> <execution> <id>make-assembly</id> <phase>package</phase> <goals> <goal>single</goal> </goals> </execution> </executions> -->
 			</plugin>
 		</plugins>
 	</build>

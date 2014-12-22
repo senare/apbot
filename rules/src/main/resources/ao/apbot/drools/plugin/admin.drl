@@ -1,0 +1,46 @@
+package apbot
+
+import java.util.Calendar;
+import ao.apbot.codec.*;
+import ao.apbot.pkg.*;
+
+global org.apache.mina.core.session.IoSession session
+global ao.apbot.AoChatBot aoChatBot
+
+dialect  "mvel"
+
+rule "Create bot"
+
+    when
+        pkg : MsgPacket(command matches "create")
+    then
+    	aoChatBot.newBot(pkg.getParam(2), pkg.getParam(3), pkg.getParam(4), pkg.getParam(1));
+  		session.write(pkg.getReply("Created bot " + pkg.getParam(2)));
+end
+
+rule "Activate bot"
+
+    when
+        pkg : MsgPacket(command matches "activate")
+    then
+	 	aoChatBot.active(pkg.getParam(1), true);
+  		session.write(pkg.getReply("Activate bot " + pkg.getParam(2)));
+end
+
+rule "Deactivate bot"
+
+    when
+        pkg : MsgPacket(command matches "deactivate")
+    then
+    	aoChatBot.active(pkg.getParam(1), false);
+  		session.write(pkg.getReply("Deactivate bot " + pkg.getParam(2)));
+end
+
+rule "Spawn bot"
+
+    when
+        pkg : MsgPacket(command matches "spawn")
+    then
+	    aoChatBot.spawn(pkg.getParam(1));
+  		session.write(pkg.getReply("Bot spawning"));
+end

@@ -1,6 +1,9 @@
 package ao.apbot.domain;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table
@@ -14,9 +17,10 @@ public class Bot {
 	private String name;
 	private String user;
 	private String password;
+	private String template;
 
 	private boolean active = false;
-	
+
 	public Bot() {
 	}
 
@@ -26,11 +30,12 @@ public class Bot {
 		this.password = password;
 	}
 
-	public Bot(String chatId, String name, String user, String password) {
-		this.chatId = chatId;
+	public Bot(String name, String user, String password, String template) {
 		this.name = name;
 		this.user = user;
 		this.password = password;
+		this.template = template;
+		this.active = true;
 	}
 
 	public String getChatId() {
@@ -65,11 +70,19 @@ public class Bot {
 		this.password = password;
 	}
 
+	public String getTemplate() {
+		return template;
+	}
+
+	public void setTemplate(String template) {
+		this.template = template;
+	}
+
 	public boolean isActive() {
 		return active;
 	}
 
 	public void setActive(boolean active) {
 		this.active = active;
-	}	
+	}
 }

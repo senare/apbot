@@ -20,6 +20,8 @@ import org.slf4j.LoggerFactory;
 
 import ao.apbot.codec.Fact;
 import ao.apbot.codec.UnparsablePacket;
+import ao.apbot.domain.Bot;
+import ao.apbot.jpa.BotManager;
 import ao.apbot.pkg.BroadcastMessagePacket;
 import ao.apbot.pkg.ChannelMessagePacket;
 import ao.apbot.pkg.ChannelUpdatePacket;
@@ -45,153 +47,177 @@ import ao.apbot.pkg.auth.PingPacket;
 
 public class AoChatBot implements ProtocolCodecFactory {
 
-    private static Logger log = LoggerFactory.getLogger(AoChatBot.class);
+	private static Logger log = LoggerFactory.getLogger(AoChatBot.class);
 
-    private String chatServerHost = "chat.d1.funcom.com";
-    private int chatServerPort = 7105;
+	private BotManager bm;
 
-    public void spawn(String handle, String username, String password) throws Exception {
-        log.info("Spawn bot {} ", handle);
+	private String chatServerHost = "chat.d1.funcom.com";
+	private int chatServerPort = 7105;
 
-        NioSocketConnector connector = new NioSocketConnector();
+	public void spawn(BotManager bm) throws Exception {
+		this.bm = bm;
 
-        connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(this));
-        connector.setHandler(new SessionHandler(handle, username, password));
+		for (Bot bot : bm.getBots()) {
+			if (bot.isActive()) {
+				spawn(bot);
+			}
+		}
+	}
 
-        for (;;) {
-            try {
-                ConnectFuture future = connector.connect(new InetSocketAddress(chatServerHost, chatServerPort));
-                future.awaitUninterruptibly();
-                future.getSession();
-                break;
-            } catch (RuntimeIoException e) {
-                System.err.println("Failed to connect " + handle);
-                e.printStackTrace();
-                Thread.sleep(5000);
-            }
-        }
-    }
+	public void newBot(String name, String username, String password, String template) {
+		bm.newBot(name, username, password, template);
+	}
 
-    public ProtocolEncoder getEncoder(IoSession session) throws Exception {
-        return ENCODER;
-    }
+	public void active(String name, boolean active) throws Exception {
+		bm.active(name, active);
+	}
 
-    public ProtocolDecoder getDecoder(IoSession session) throws Exception {
-        return DECODER;
-    }
+	public void spawn(String name) throws Exception {
+		spawn(bm.load(name).get(0));
+	}
 
-    private static final ProtocolEncoder ENCODER = new ProtocolEncoder() {
+	public void spawn(Bot bot) throws Exception {
+		log.info("Spawn bot {} ", bot.getName());
 
-        @Override
-        public void encode(IoSession session, Object message, ProtocolEncoderOutput out) throws Exception {
-            if (message instanceof Fact) {
-                Fact pkg = (Fact) message;
-                IoBuffer buffer = IoBuffer.allocate(1024);
-                buffer.setAutoExpand(true);
-                buffer.order(ByteOrder.BIG_ENDIAN);
-                buffer.putShort(pkg.getType());
-                int position = buffer.position();
-                buffer.putShort((short) 0);
-                pkg.encode(buffer);
-                short len = (short) (buffer.position() - (position + 2));
-                buffer.putShort(position, len);
-                buffer.flip();
-                out.write(buffer);
-            } else {
-                log.info("FAIL !!!");
-                log.info(" " + message);
-                log.info("class " + message.getClass());
-            }
-        }
+		NioSocketConnector connector = new NioSocketConnector();
 
-        @Override
-        public void dispose(IoSession session) throws Exception {
-        }
-    };
+		connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(this));
+		connector.setHandler(new SessionHandler(bot, this));
 
-    private static final CumulativeProtocolDecoder DECODER = new CumulativeProtocolDecoder() {
+		for (;;) {
+			try {
+				ConnectFuture future = connector.connect(new InetSocketAddress(chatServerHost, chatServerPort));
+				future.awaitUninterruptibly();
+				future.getSession();
+				break;
+			} catch (RuntimeIoException e) {
+				System.err.println("Failed to connect " + bot.getName());
+				e.printStackTrace();
+				Thread.sleep(5000);
+			}
+		}
+	}
 
-        @Override
-        protected boolean doDecode(IoSession session, IoBuffer ioBuffer, ProtocolDecoderOutput decoderOutput) throws Exception {
-            int startPosition = ioBuffer.position();
+	public ProtocolEncoder getEncoder(IoSession session) throws Exception {
+		return ENCODER;
+	}
 
-            if (ioBuffer.remaining() < 3) {
-                log.debug("Not enough bytes to read keep waiting...");
-                return false;
-            }
+	public ProtocolDecoder getDecoder(IoSession session) throws Exception {
+		return DECODER;
+	}
 
-            try {
-                short type = ioBuffer.getShort();
-                Fact packet = packet(type);
-                if (!(packet instanceof UnparsablePacket)) {
-                    short len = ioBuffer.getShort();
-                    if (ioBuffer.remaining() < len) {
-                        log.debug("Not enough bytes to read keep waiting...");
-                        ioBuffer.position(startPosition);
-                        return false;
-                    }
-                }
-                packet.decode(ioBuffer);
-                decoderOutput.write(packet);
-                return true;
-            } catch (Exception x) {
-                log.debug("Something went wrong rollback position");
-                ioBuffer.position(startPosition);
-                return false;
-            }
-        }
+	private static final ProtocolEncoder ENCODER = new ProtocolEncoder() {
 
-    };
+		@Override
+		public void encode(IoSession session, Object message, ProtocolEncoderOutput out) throws Exception {
+			if (message instanceof Fact) {
+				Fact pkg = (Fact) message;
+				IoBuffer buffer = IoBuffer.allocate(1024);
+				buffer.setAutoExpand(true);
+				buffer.order(ByteOrder.BIG_ENDIAN);
+				buffer.putShort(pkg.getType());
+				int position = buffer.position();
+				buffer.putShort((short) 0);
+				pkg.encode(buffer);
+				short len = (short) (buffer.position() - (position + 2));
+				buffer.putShort(position, len);
+				buffer.flip();
+				out.write(buffer);
+			} else {
+				log.info("FAIL !!!");
+				log.info(" " + message);
+				log.info("class " + message.getClass());
+			}
+		}
 
-    private static Fact packet(short type) {
-        switch (type) {
-        case LoginSeedPacket.TYPE:
-            return new LoginSeedPacket(); // TYPE 0
-        case LoginOkPacket.TYPE:
-            return new LoginOkPacket(); // TYPE 5
-        case LoginErrorPacket.TYPE:
-            return new LoginErrorPacket(); // TYPE 6
-        case CharacterListPacket.TYPE:
-            return new CharacterListPacket(); // TYPE 7
-        case CharacterUnknownPacket.TYPE:
-            return new CharacterUnknownPacket(); // TYPE 10
-        case SystemMessagePacket.TYPE:
-            return new SystemMessagePacket(); // TYPE 20
-        case CharacterLookupPacket.TYPE:
-            return new CharacterLookupPacket(); // TYPE 21
-        case PrivateMessagePacket.TYPE:
-            return new PrivateMessagePacket(); // TYPE 30
-        case VicinityMessagePacket.TYPE:
-            return new VicinityMessagePacket(); // TYPE 34
-        case BroadcastMessagePacket.TYPE:
-            return new BroadcastMessagePacket(); // TYPE 35
-        case SimpleSystemMessagePacket.TYPE:
-            return new SimpleSystemMessagePacket(); // TYPE 36
-        case CharacterUpdatePacket.TYPE:
-            return new CharacterUpdatePacket(); // TYPE 37
-        case FriendUpdatePacket.TYPE:
-            return new FriendUpdatePacket(); // TYPE 40
-        case FriendRemovePacket.TYPE:
-            return new FriendRemovePacket(); // TYPE 41
-        case PrivateChannelInvitePacket.TYPE:
-            return new PrivateChannelInvitePacket(); // TYPE 50
-        case PrivateChannelKickPacket.TYPE:
-            return new PrivateChannelKickPacket(); // TYPE 51
-        case PrivateChannelCharacterJoinPacket.TYPE:
-            return new PrivateChannelCharacterJoinPacket(); // TYPE 55
-        case PrivateChannelCharacterLeavePacket.TYPE:
-            return new PrivateChannelCharacterLeavePacket(); // TYPE 56
-        case PrivateChannelMessagePacket.TYPE:
-            return new PrivateChannelMessagePacket(); // TYPE 57
-        case ChannelUpdatePacket.TYPE:
-            return new ChannelUpdatePacket(); // TYPE 60
-        case ChannelMessagePacket.TYPE:
-            return new ChannelMessagePacket(); // TYPE 65
-        case PingPacket.TYPE:
-            return new PingPacket(); // TYPE 100
+		@Override
+		public void dispose(IoSession session) throws Exception {
+		}
+	};
 
-        default:
-            return new UnparsablePacket(type);
-        }
-    }
+	private static final CumulativeProtocolDecoder DECODER = new CumulativeProtocolDecoder() {
+
+		@Override
+		protected boolean doDecode(IoSession session, IoBuffer ioBuffer, ProtocolDecoderOutput decoderOutput) throws Exception {
+			int startPosition = ioBuffer.position();
+
+			if (ioBuffer.remaining() < 3) {
+				log.debug("Not enough bytes to read keep waiting...");
+				return false;
+			}
+
+			try {
+				short type = ioBuffer.getShort();
+				Fact packet = packet(type);
+				if (!(packet instanceof UnparsablePacket)) {
+					short len = ioBuffer.getShort();
+					if (ioBuffer.remaining() < len) {
+						log.debug("Not enough bytes to read keep waiting...");
+						ioBuffer.position(startPosition);
+						return false;
+					}
+				}
+				packet.decode(ioBuffer);
+				decoderOutput.write(packet);
+				return true;
+			} catch (Exception x) {
+				log.debug("Something went wrong rollback position");
+				ioBuffer.position(startPosition);
+				return false;
+			}
+		}
+
+	};
+
+	private static Fact packet(short type) {
+		switch (type) {
+		case LoginSeedPacket.TYPE:
+			return new LoginSeedPacket(); // TYPE 0
+		case LoginOkPacket.TYPE:
+			return new LoginOkPacket(); // TYPE 5
+		case LoginErrorPacket.TYPE:
+			return new LoginErrorPacket(); // TYPE 6
+		case CharacterListPacket.TYPE:
+			return new CharacterListPacket(); // TYPE 7
+		case CharacterUnknownPacket.TYPE:
+			return new CharacterUnknownPacket(); // TYPE 10
+		case SystemMessagePacket.TYPE:
+			return new SystemMessagePacket(); // TYPE 20
+		case CharacterLookupPacket.TYPE:
+			return new CharacterLookupPacket(); // TYPE 21
+		case PrivateMessagePacket.TYPE:
+			return new PrivateMessagePacket(); // TYPE 30
+		case VicinityMessagePacket.TYPE:
+			return new VicinityMessagePacket(); // TYPE 34
+		case BroadcastMessagePacket.TYPE:
+			return new BroadcastMessagePacket(); // TYPE 35
+		case SimpleSystemMessagePacket.TYPE:
+			return new SimpleSystemMessagePacket(); // TYPE 36
+		case CharacterUpdatePacket.TYPE:
+			return new CharacterUpdatePacket(); // TYPE 37
+		case FriendUpdatePacket.TYPE:
+			return new FriendUpdatePacket(); // TYPE 40
+		case FriendRemovePacket.TYPE:
+			return new FriendRemovePacket(); // TYPE 41
+		case PrivateChannelInvitePacket.TYPE:
+			return new PrivateChannelInvitePacket(); // TYPE 50
+		case PrivateChannelKickPacket.TYPE:
+			return new PrivateChannelKickPacket(); // TYPE 51
+		case PrivateChannelCharacterJoinPacket.TYPE:
+			return new PrivateChannelCharacterJoinPacket(); // TYPE 55
+		case PrivateChannelCharacterLeavePacket.TYPE:
+			return new PrivateChannelCharacterLeavePacket(); // TYPE 56
+		case PrivateChannelMessagePacket.TYPE:
+			return new PrivateChannelMessagePacket(); // TYPE 57
+		case ChannelUpdatePacket.TYPE:
+			return new ChannelUpdatePacket(); // TYPE 60
+		case ChannelMessagePacket.TYPE:
+			return new ChannelMessagePacket(); // TYPE 65
+		case PingPacket.TYPE:
+			return new PingPacket(); // TYPE 100
+
+		default:
+			return new UnparsablePacket(type);
+		}
+	}
 }
