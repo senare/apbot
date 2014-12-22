@@ -3,6 +3,7 @@ package apbot
 import java.util.Calendar;
 import ao.apbot.codec.*;
 import ao.apbot.pkg.*;
+import ao.apbot.AoChatBot;
 
 global org.apache.mina.core.session.IoSession session;
 global ao.apbot.AoChatBot aoChatBot;
