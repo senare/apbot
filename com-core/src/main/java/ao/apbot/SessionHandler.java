@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ao.apbot.codec.Fact;
+import ao.apbot.codec.MsgPacket;
 import ao.apbot.codec.TimeFact;
 import ao.apbot.domain.Bot;
 import ao.apbot.pkg.auth.CharacterListPacket;
@@ -55,6 +56,10 @@ public class SessionHandler extends IoHandlerAdapter {
 	public void messageReceived(IoSession session, Object message) {
 		log.info("{} received {}", handle, message);
 
+		if (message instanceof MsgPacket) {
+			log.info("MsgPacket [{}]", ((MsgPacket) message).getMsg());
+		}
+
 		if (message instanceof Fact) {
 			Fact pkg = (Fact) message;
 			switch (pkg.getType()) {
@@ -74,11 +79,15 @@ public class SessionHandler extends IoHandlerAdapter {
 				log.info("{} failed to logon", handle);
 				break;
 			default:
+
+				if (pkg instanceof MsgPacket) {
+					log.debug("Command " + ((MsgPacket) pkg).getCommand());
+				}
 				KieSession ksession = kc.newKieSession("APbotSession");
 
 				// map for all bot's, or something ??
 				ksession.setGlobal("session", session);
-//				ksession.setGlobal("manager", aoChatBot);
+				// ksession.setGlobal("manager", aoChatBot);
 
 				ksession.insert(new TimeFact(Calendar.getInstance()));
 				ksession.insert(pkg);

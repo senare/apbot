@@ -1,0 +1,18 @@
+package apbot
+
+import java.util.Calendar;
+import ao.apbot.codec.*;
+import ao.apbot.pkg.*;
+import ao.apbot.*;
+
+global org.apache.mina.core.session.IoSession session;
+
+dialect  "mvel"
+
+rule "Echo"
+
+    when
+        pkg : MsgPacket(command matches "echo")
+    then
+  		session.write(pkg.getReply(msg));
+end
