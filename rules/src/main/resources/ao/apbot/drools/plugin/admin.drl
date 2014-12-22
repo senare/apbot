@@ -6,7 +6,7 @@ import ao.apbot.pkg.*;
 import ao.apbot.*;
 
 global org.apache.mina.core.session.IoSession session;
-global ao.apbot.AoChatBot manager;
+# global ao.apbot.AoChatBot manager;
 
 dialect  "mvel"
 
@@ -15,7 +15,7 @@ rule "Create bot"
     when
         pkg : MsgPacket(command matches "create")
     then
-    	aochatbot.newBot(pkg.getParam(2), pkg.getParam(3), pkg.getParam(4), pkg.getParam(1));
+    	# aochatbot.newBot(pkg.getParam(2), pkg.getParam(3), pkg.getParam(4), pkg.getParam(1));
   		session.write(pkg.getReply("Created bot " + pkg.getParam(2)));
 end
 
@@ -24,7 +24,7 @@ rule "Activate bot"
     when
         pkg : MsgPacket(command matches "activate")
     then
-	 	aochatbot.active(pkg.getParam(1), true);
+	 	# aochatbot.active(pkg.getParam(1), true);
   		session.write(pkg.getReply("Activate bot " + pkg.getParam(2)));
 end
 
@@ -33,7 +33,7 @@ rule "Deactivate bot"
     when
         pkg : MsgPacket(command matches "deactivate")
     then
-    	aochatbot.active(pkg.getParam(1), false);
+    	# aochatbot.active(pkg.getParam(1), false);
   		session.write(pkg.getReply("Deactivate bot " + pkg.getParam(2)));
 end
 
@@ -42,6 +42,6 @@ rule "Spawn bot"
     when
         pkg : MsgPacket(command matches "spawn")
     then
-	    aochatbot.spawn(pkg.getParam(1));
+	    # aochatbot.spawn(pkg.getParam(1));
   		session.write(pkg.getReply("Bot spawning"));
 end
