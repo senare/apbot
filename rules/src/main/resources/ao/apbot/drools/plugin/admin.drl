@@ -16,7 +16,7 @@ rule "Create bot"
         pkg : MsgPacket(command matches "create")
     then
     	# aochatbot.newBot(pkg.getParam(2), pkg.getParam(3), pkg.getParam(4), pkg.getParam(1));
-  		session.write(pkg.getReply("Created bot " + pkg.getParam(2)));
+  		session.write(pkg.getReply("Created bot "));
 end
 
 rule "Activate bot"
