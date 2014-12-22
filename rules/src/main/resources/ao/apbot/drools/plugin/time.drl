@@ -4,8 +4,8 @@ import java.util.Calendar;
 import ao.apbot.codec.*;
 import ao.apbot.pkg.*;
 
-global org.apache.mina.core.session.IoSession session
-global ao.apbot.AoChatBot aoChatBot
+global org.apache.mina.core.session.IoSession session;
+global ao.apbot.AoChatBot aoChatBot;
 
 
 dialect  "mvel"

@@ -4,8 +4,8 @@ import ao.apbot.pkg.*;
 
 dialect  "mvel"
 
-global org.apache.mina.core.session.IoSession session
-global ao.apbot.AoChatBot aoChatBot
+global org.apache.mina.core.session.IoSession session;
+global ao.apbot.AoChatBot aoChatBot;
 
 rule "ChannelUpdatePacket"
 
