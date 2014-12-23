@@ -2,16 +2,20 @@ package ao.apbot.jpa;
 
 import java.util.List;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
 
 import ao.apbot.domain.Bot;
 
-@ApplicationScoped
+@Stateless
+@TransactionManagement(TransactionManagementType.CONTAINER)
 public class BotManager {
 
 	@PersistenceContext(unitName = "ao.apbot.orm")
@@ -21,7 +25,7 @@ public class BotManager {
 		return entityManager.createQuery("From Bot ", Bot.class).getResultList();
 	}
 
-	@Transactional
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void newBot(String name, String username, String password, String template) {
 		entityManager.persist(new Bot(name, username, password, template));
 	}
@@ -32,7 +36,7 @@ public class BotManager {
 		return hql.getResultList();
 	}
 
-	@Transactional
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void active(String name, boolean active) {
 		Query hql = entityManager.createQuery("UPDATE Bot B set B.active = :active WHERE B.name = :name");
 		hql.setParameter("name", name);
