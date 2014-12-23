@@ -72,6 +72,10 @@ public class AoChatBot implements ProtocolCodecFactory {
 		bm.active(name, active);
 	}
 
+	public void kill(String name) throws Exception {
+		// TODO implement this ...
+	}
+
 	public void spawn(String name) throws Exception {
 		spawn(bm.load(name).get(0));
 	}

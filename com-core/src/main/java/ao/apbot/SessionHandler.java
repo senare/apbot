@@ -87,7 +87,7 @@ public class SessionHandler extends IoHandlerAdapter {
 
 				// map for all bot's, or something ??
 				ksession.setGlobal("session", session);
-				// ksession.setGlobal("manager", aoChatBot);
+				ksession.setGlobal("manager", aoChatBot);
 
 				ksession.insert(new TimeFact(Calendar.getInstance()));
 				ksession.insert(pkg);
