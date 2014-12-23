@@ -32,18 +32,21 @@ public abstract class MsgPacket extends Fact {
 			return new PrivateMessagePacket(((PrivateMessagePacket) this).getCharacterId(), msg);
 		}
 	}
-
+	
+	private String command = null;
+	
 	private List<String> params = new ArrayList<>();
 
 	private void split() {
 		params.addAll(Arrays.asList(getMsg().split("\\s+")));
+		this.command = params.get(0).substring(1);
 	}
 
 	public String getCommand() {
 		if (params.size() < 1)
 			this.split();
 
-		return params.get(0).substring(1);
+		return command;
 	}
 
 	public String getParam(int index) {
