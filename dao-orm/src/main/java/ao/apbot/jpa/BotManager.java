@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 
 import ao.apbot.domain.Bot;
 
@@ -20,6 +21,7 @@ public class BotManager {
 		return entityManager.createQuery("From Bot ", Bot.class).getResultList();
 	}
 
+	@Transactional
 	public void newBot(String name, String username, String password, String template) {
 		entityManager.persist(new Bot(name, username, password, template));
 	}
@@ -30,6 +32,7 @@ public class BotManager {
 		return hql.getResultList();
 	}
 
+	@Transactional
 	public void active(String name, boolean active) {
 		Query hql = entityManager.createQuery("UPDATE Bot B set B.active = :active WHERE B.name = :name");
 		hql.setParameter("name", name);
