@@ -45,3 +45,12 @@ rule "Spawn bot"
 	    # aochatbot.spawn(pkg.getParam(1));
   		session.write(pkg.getReply("Bot spawning"));
 end
+
+rule "Kill bot"
+
+    when
+        pkg : MsgPacket(command matches "kill")
+    then
+	    # aochatbot.spawn(pkg.getParam(1));
+  		session.write(pkg.getReply("Bot terminating"));
+end

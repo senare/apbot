@@ -21,6 +21,9 @@ public class SessionHandlerTest {
 		// WHEN
 		handler.messageReceived(session, message);
 
-		// THEN
+		Object message2 = new PrivateChannelMessagePacket(55, "!gubbe test");
+
+		// WHEN
+		handler.messageReceived(session, message2);
 	}
 }
