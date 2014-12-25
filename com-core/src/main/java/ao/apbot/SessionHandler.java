@@ -51,7 +51,7 @@ public class SessionHandler extends IoHandlerAdapter {
 			log.info(msg.toString() + "  " + msg.getText());
 		}
 	}
-	
+
 	@Override
 	public void messageReceived(IoSession session, Object message) {
 		log.info("{} received {}", handle, message);
@@ -102,6 +102,11 @@ public class SessionHandler extends IoHandlerAdapter {
 	@Override
 	public void sessionOpened(IoSession session) {
 		log.info("{} connect", handle);
+	}
+
+	@Override
+	public void sessionClosed(IoSession session) throws Exception {
+		log.info("{} dissconnect", handle);
 	}
 
 	@Override
