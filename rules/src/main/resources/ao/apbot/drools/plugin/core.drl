@@ -13,9 +13,10 @@ rule "Auth"
 
 //      Chrisax Id[16728]
 //      Workboy Id[603863]
+//      Doodi Id[683837]
 
     when
-        pkg : MsgPacket(pkg.getCharacterId()==16728 || pkg.getCharacterId()==603863)
+        pkg : MsgPacket(pkg.getCharacterId()==16728 || pkg.getCharacterId()==603863 || pkg.getCharacterId()==683837)
     then
     	session.write(pkg.getReply("you are admin"));
 end

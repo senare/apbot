@@ -77,7 +77,9 @@ public class AoChatBot implements ProtocolCodecFactory {
 	}
 
 	public void kill(String name) throws Exception {
-		network.get(name).close(true);
+		if (network.containsKey(name)) {
+			network.get(name).close(true);
+		}
 	}
 
 	public void spawn(String name) throws Exception {
