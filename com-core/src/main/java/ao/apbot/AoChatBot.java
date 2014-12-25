@@ -2,8 +2,8 @@ package ao.apbot;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteOrder;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.apache.mina.core.RuntimeIoException;
 import org.apache.mina.core.buffer.IoBuffer;
@@ -51,7 +51,7 @@ public class AoChatBot implements ProtocolCodecFactory {
 
 	private static Logger log = LoggerFactory.getLogger(AoChatBot.class);
 
-	private Map<String, IoSession> network = new HashMap<>();
+	private ConcurrentMap<String, IoSession> network = new ConcurrentHashMap<>();
 
 	private BotManager bm;
 
@@ -63,7 +63,7 @@ public class AoChatBot implements ProtocolCodecFactory {
 
 		for (Bot bot : bm.getBots()) {
 			if (bot.isActive()) {
-				network.put(bot.getName(), spawn(bot));
+				spawn(bot);
 			}
 		}
 	}
@@ -78,37 +78,60 @@ public class AoChatBot implements ProtocolCodecFactory {
 
 	public void kill(String name) throws Exception {
 		if (network.containsKey(name)) {
-			network.get(name).close(true);
+			IoSession ioSession = network.get(name);
+			synchronized (network) {
+				ioSession.close(true);
+				network.remove(name);
+			}
+			log.debug("Halt {} ", name);
+		} else {
+			log.debug("No such handle running {} ", name);
 		}
 	}
 
 	public void spawn(String name) throws Exception {
-		network.put(name, spawn(bm.load(name).get(0)));
+		spawn(bm.load(name).get(0));
 	}
 
-	public IoSession spawn(Bot bot) throws Exception {
-		log.info("Spawn bot {} ", bot.getName());
+	private static final Object TOKEN = new Object();
 
-		NioSocketConnector connector = new NioSocketConnector();
+	private void spawn(Bot bot) throws Exception {
 
-		connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(this));
-		connector.setHandler(new SessionHandler(bot, this));
-
-		IoSession session;
-		for (;;) {
-			try {
-				ConnectFuture future = connector.connect(new InetSocketAddress(chatServerHost, chatServerPort));
-				future.awaitUninterruptibly();
-				session = future.getSession();
-				break;
-			} catch (RuntimeIoException e) {
-				System.err.println("Failed to connect " + bot.getName());
-				e.printStackTrace();
-				Thread.sleep(5000);
-			}
+		IoSession botInstance = network.putIfAbsent(bot.getName(), (IoSession) TOKEN);
+		if (botInstance != null && botInstance != TOKEN) {
+			log.info("Bot {} is running", bot.getName());
+			return;
 		}
 
-		return session;
+		synchronized (network) {
+			botInstance = network.putIfAbsent(bot.getName(), (IoSession) TOKEN);
+			if (botInstance != null && botInstance != TOKEN) {
+				/* Bot spawned by competing thread */
+				return;
+			}
+
+			log.info("Spawn bot {} ", bot.getName());
+
+			NioSocketConnector connector = new NioSocketConnector();
+
+			connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(this));
+			connector.setHandler(new SessionHandler(bot, this));
+
+			IoSession session;
+			for (;;) {
+				try {
+					ConnectFuture future = connector.connect(new InetSocketAddress(chatServerHost, chatServerPort));
+					future.awaitUninterruptibly();
+					session = future.getSession();
+					break;
+				} catch (RuntimeIoException e) {
+					System.err.println("Failed to connect " + bot.getName());
+					e.printStackTrace();
+					Thread.sleep(5000);
+				}
+			}
+			network.put(bot.getName(), session);
+		}
 	}
 
 	public ProtocolEncoder getEncoder(IoSession session) throws Exception {
