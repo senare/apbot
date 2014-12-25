@@ -82,7 +82,11 @@ public class SessionHandler extends IoHandlerAdapter {
 
 				if (pkg instanceof MsgPacket) {
 					log.debug("Command " + ((MsgPacket) pkg).getCommand());
+					for (int i = 0; i < ((MsgPacket) pkg).getNoParams(); i++) {
+						log.debug("Param {} = {} ", i, ((MsgPacket) pkg).getParam(i));
+					}
 				}
+				
 				KieSession ksession = kc.newKieSession("APbotSession");
 
 				// map for all bot's, or something ??

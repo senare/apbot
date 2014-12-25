@@ -2,6 +2,7 @@ package ao.apbot;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteOrder;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -91,7 +92,16 @@ public class AoChatBot implements ProtocolCodecFactory {
 	}
 
 	public void spawn(String name) throws Exception {
-		spawn(bm.load(name).get(0));
+		List<Bot> bots = bm.load(name);
+		if (bots.size() == 1) {
+			spawn(bots.get(0));
+		} else {
+			if (bots.isEmpty()) {
+				log.debug("No such bot defined {} ", name, bots.size());
+			} else {
+				log.debug("Unbigious {} found {} instances", name, bots.size());
+			}
+		}
 	}
 
 	private static final IoSession TOKEN = new DummySession();

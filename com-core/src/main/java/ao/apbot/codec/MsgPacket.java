@@ -15,7 +15,7 @@ public abstract class MsgPacket extends Fact {
 	}
 
 	public abstract int getCharacterId();
-	
+
 	public abstract String getMsg();
 
 	public MsgPacket getReply(String msg) {
@@ -27,14 +27,25 @@ public abstract class MsgPacket extends Fact {
 			return new PrivateMessagePacket(((PrivateMessagePacket) this).getCharacterId(), msg);
 		}
 	}
-	
+
 	private String command = null;
-	
+
+	private int noParams = 0;
+
 	private List<String> params = new ArrayList<>();
 
 	private void split() {
 		params.addAll(Arrays.asList(getMsg().split("\\s+")));
-		this.command = params.get(0).substring(1);
+		this.command = params.get(0);
+
+		if (this.command.startsWith("!")) {
+			this.command = this.command.substring(1);
+		}
+
+		this.noParams = params.size();
+		if (this.noParams > 1) {
+			this.noParams--;
+		}
 	}
 
 	public String getCommand() {
@@ -49,6 +60,10 @@ public abstract class MsgPacket extends Fact {
 			this.split();
 
 		return params.get(index);
+	}
+
+	public int getNoParams() {
+		return this.noParams;
 	}
 
 	// private Pattern regExp =
@@ -76,5 +91,4 @@ public abstract class MsgPacket extends Fact {
 	// public String getParam(int index) {
 	// return params.get(index - 1);
 	// }
-
 }
