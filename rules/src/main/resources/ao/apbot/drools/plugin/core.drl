@@ -15,7 +15,7 @@ rule "Auth"
 //      Workboy Id[603863]
 
     when
-        pkg : MsgPacket(characterId==16728 || characterId==603863)
+        pkg : MsgPacket(pkg.getCharacterId()==16728 || pkg.getCharacterId()==603863)
     then
     	session.write(pkg.getReply("you are admin"));
 end

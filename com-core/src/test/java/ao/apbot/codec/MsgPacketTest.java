@@ -30,6 +30,11 @@ public class MsgPacketTest {
 			public String getMsg() {
 				return msg;
 			}
+
+			@Override
+			public int getCharacterId() {
+				return 0;
+			}
 		};
 	}
 }

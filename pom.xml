@@ -38,6 +38,11 @@
 				<artifactId>dao-orm</artifactId>
 				<version>0.0.2-SNAPSHOT</version>
 			</dependency>
+			<dependency>
+				<groupId>ao.apbot</groupId>
+				<artifactId>rules</artifactId>
+				<version>0.0.2-SNAPSHOT</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<build>

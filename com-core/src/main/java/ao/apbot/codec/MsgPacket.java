@@ -3,11 +3,6 @@ package ao.apbot.codec;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import ao.apbot.pkg.ChannelMessagePacket;
 import ao.apbot.pkg.PrivateChannelMessagePacket;
@@ -15,12 +10,12 @@ import ao.apbot.pkg.PrivateMessagePacket;
 
 public abstract class MsgPacket extends Fact {
 
-	private static Logger log = LoggerFactory.getLogger(MsgPacket.class);
-
 	public MsgPacket(short type) {
 		super(type);
 	}
 
+	public abstract int getCharacterId();
+	
 	public abstract String getMsg();
 
 	public MsgPacket getReply(String msg) {

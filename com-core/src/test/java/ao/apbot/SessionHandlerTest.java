@@ -10,7 +10,6 @@ import ao.apbot.pkg.PrivateChannelMessagePacket;
 public class SessionHandlerTest {
 
 	@Test
-	@Ignore
 	public void test() {
 		// GIVEN
 		Bot bot = new Bot("Karl", "user", "secret", "template");
@@ -18,7 +17,7 @@ public class SessionHandlerTest {
 		SessionHandler handler = new SessionHandler(bot, aoChatBot);
 
 		IoSession session = null;
-		Object message = new PrivateChannelMessagePacket(55, "!create admin bot user pwd");
+		Object message = new PrivateChannelMessagePacket(55, "!aaacreate admin bot user pwd");
 
 		// WHEN
 		handler.messageReceived(session, message);
