@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentMap;
 import org.apache.mina.core.RuntimeIoException;
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.future.ConnectFuture;
+import org.apache.mina.core.session.DummySession;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.CumulativeProtocolDecoder;
 import org.apache.mina.filter.codec.ProtocolCodecFactory;
@@ -93,11 +94,11 @@ public class AoChatBot implements ProtocolCodecFactory {
 		spawn(bm.load(name).get(0));
 	}
 
-	private static final Object TOKEN = new Object();
+	private static final IoSession TOKEN = new DummySession();
 
 	private void spawn(Bot bot) throws Exception {
 
-		IoSession botInstance = network.putIfAbsent(bot.getName(), (IoSession) TOKEN);
+		IoSession botInstance = network.putIfAbsent(bot.getName(), TOKEN);
 		if (botInstance != null && botInstance != TOKEN) {
 			log.info("Bot {} is running", bot.getName());
 			return;
