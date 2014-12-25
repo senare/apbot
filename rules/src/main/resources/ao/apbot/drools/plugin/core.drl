@@ -9,6 +9,19 @@ global org.apache.mina.core.session.IoSession session;
 
 dialect  "mvel"
 
+rule "Auth"
+
+//      Chrisax Id[16728]
+//      Workboy Id[603863]
+
+    when
+        pkg : MsgPacket(characterId for [16728, 603863])
+    then
+    	session.write(pkg.getReply("you are admin"));
+end
+
+
+
 rule "Echo"
 
     when

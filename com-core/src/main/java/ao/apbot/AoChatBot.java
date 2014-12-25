@@ -2,6 +2,8 @@ package ao.apbot;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteOrder;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.mina.core.RuntimeIoException;
 import org.apache.mina.core.buffer.IoBuffer;
@@ -49,6 +51,8 @@ public class AoChatBot implements ProtocolCodecFactory {
 
 	private static Logger log = LoggerFactory.getLogger(AoChatBot.class);
 
+	private Map<String, IoSession> network = new HashMap<>();
+
 	private BotManager bm;
 
 	private String chatServerHost = "chat.d1.funcom.com";
@@ -59,7 +63,7 @@ public class AoChatBot implements ProtocolCodecFactory {
 
 		for (Bot bot : bm.getBots()) {
 			if (bot.isActive()) {
-				spawn(bot);
+				network.put(bot.getName(), spawn(bot));
 			}
 		}
 	}
@@ -73,14 +77,14 @@ public class AoChatBot implements ProtocolCodecFactory {
 	}
 
 	public void kill(String name) throws Exception {
-		// TODO implement this ...
+		network.get(name).close(true);
 	}
 
 	public void spawn(String name) throws Exception {
-		spawn(bm.load(name).get(0));
+		network.put(name, spawn(bm.load(name).get(0)));
 	}
 
-	public void spawn(Bot bot) throws Exception {
+	public IoSession spawn(Bot bot) throws Exception {
 		log.info("Spawn bot {} ", bot.getName());
 
 		NioSocketConnector connector = new NioSocketConnector();
@@ -88,11 +92,12 @@ public class AoChatBot implements ProtocolCodecFactory {
 		connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(this));
 		connector.setHandler(new SessionHandler(bot, this));
 
+		IoSession session;
 		for (;;) {
 			try {
 				ConnectFuture future = connector.connect(new InetSocketAddress(chatServerHost, chatServerPort));
 				future.awaitUninterruptibly();
-				future.getSession();
+				session = future.getSession();
 				break;
 			} catch (RuntimeIoException e) {
 				System.err.println("Failed to connect " + bot.getName());
@@ -100,6 +105,8 @@ public class AoChatBot implements ProtocolCodecFactory {
 				Thread.sleep(5000);
 			}
 		}
+
+		return session;
 	}
 
 	public ProtocolEncoder getEncoder(IoSession session) throws Exception {

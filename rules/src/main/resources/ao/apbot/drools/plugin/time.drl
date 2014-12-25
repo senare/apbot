@@ -26,7 +26,6 @@ rule "Christmas great"
     when
         time : TimeFact(month == Calendar.DECEMBER && day == 24)
     then
-    	System.out.println( "Christmas" );
 		time.setGreating("\n ##red##Merry##end## ##lime##Christmas##end## ##red##from##end## ##lime##Santa##end## ##red##Leet !!##end##");
 end
 

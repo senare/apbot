@@ -51,7 +51,7 @@ public class SessionHandler extends IoHandlerAdapter {
 			log.info(msg.toString() + "  " + msg.getText());
 		}
 	}
-
+	
 	@Override
 	public void messageReceived(IoSession session, Object message) {
 		log.info("{} received {}", handle, message);
