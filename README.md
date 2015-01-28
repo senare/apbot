@@ -1,4 +1,6 @@
-apbot
+
+[ ![Codeship Status for senare/apbot](https://codeship.com/projects/640237d0-88f4-0132-c963-3ae5e43a70a3/status?branch=master)](https://codeship.com/projects/59558)
+
 =====
 
 A Perfect Bot
