@@ -17,31 +17,45 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<ao.apbot.version>0.0.2-SNAPSHOT</ao.apbot.version>
 		<mina.version>2.0.7</mina.version>
 		<guava.version>18.0</guava.version>
-		<slf4j.version>1.7.7</slf4j.version>
-		<drools.version>6.2.0.CR2</drools.version>
-		<junit.version>4.11</junit.version>
-		<ao.apbot.version>0.0.2-SNAPSHOT</ao.apbot.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>org.jboss.spec</groupId>
-				<artifactId>jboss-javaee-7.0</artifactId>
-				<version>1.0.0.Final</version>
+				<groupId>org.wildfly.bom</groupId>
+				<artifactId>jboss-javaee-7.0-with-all</artifactId>
+				<version>8.2.1.Final</version>
 				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.drools</groupId>
+				<artifactId>drools-bom</artifactId>
+				<type>pom</type>
+				<version>6.2.0.CR2</version>
 				<scope>import</scope>
 			</dependency>
 			<dependency>
 				<groupId>ao.apbot</groupId>
 				<artifactId>dao-orm</artifactId>
-				<version>0.0.2-SNAPSHOT</version>
+				<version>${ao.apbot.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>ao.apbot</groupId>
 				<artifactId>rules</artifactId>
-				<version>0.0.2-SNAPSHOT</version>
+				<version>${ao.apbot.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>ao.apbot</groupId>
+				<artifactId>bom</artifactId>
+				<version>${ao.apbot.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>ao.apbot</groupId>
+				<artifactId>com-core</artifactId>
+				<version>${ao.apbot.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
