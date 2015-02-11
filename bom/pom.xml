@@ -64,7 +64,7 @@
 						</manifestEntries>
 					</archive>
 					<outputDirectory>../deployments</outputDirectory>
-					<warName>ROOT</warName>
+					<warName>apbot</warName>
 				</configuration>
 			</plugin>
 			<plugin>
