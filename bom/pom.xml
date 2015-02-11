@@ -63,6 +63,8 @@
 							<Dependencies>org.slf4j</Dependencies>
 						</manifestEntries>
 					</archive>
+					<outputDirectory>../deployments</outputDirectory>
+					<warName>ROOT</warName>
 				</configuration>
 			</plugin>
 			<plugin>
