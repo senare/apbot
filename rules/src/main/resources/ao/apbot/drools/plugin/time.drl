@@ -1,0 +1,46 @@
+package apbot
+
+import java.util.Calendar;
+import ao.apbot.codec.*;
+import ao.apbot.pkg.*;
+import ao.apbot.*;
+
+global org.apache.mina.core.session.IoSession session;
+
+dialect  "mvel"
+
+rule "Time command"
+
+	salience -100
+
+    when
+        pkg : MsgPacket(command matches "time")
+        time : TimeFact()
+    then
+  		session.write(pkg.getReply(time.toString()));
+end
+
+
+rule "Christmas great"
+
+    when
+        time : TimeFact(month == Calendar.DECEMBER && day == 24)
+    then
+		time.setGreating("\n ##red##Merry##end## ##lime##Christmas##end## ##red##from##end## ##lime##Santa##end## ##red##Leet !!##end##");
+end
+
+rule "Halloween"
+
+    when
+        time : TimeFact(getMonth()==Calendar.OCTOBER && getDay() == 31)
+    then
+		time.setGreating("\n ##darkorange##Happy Halloween from Uncle Pumpkin-head !!##end##");
+end
+
+rule "Birthday"
+
+    when
+        time : TimeFact(getMonth()==Calendar.JUNE && getDay() == 27)
+    then
+		time.setGreating("\n Happy Birthday Rubi Ka");
+end

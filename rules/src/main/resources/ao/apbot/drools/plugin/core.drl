@@ -1,0 +1,32 @@
+package apbot
+
+import java.util.Calendar;
+import ao.apbot.codec.*;
+import ao.apbot.pkg.*;
+import ao.apbot.*;
+
+global org.apache.mina.core.session.IoSession session;
+
+dialect  "mvel"
+
+rule "Auth"
+
+//      Chrisax Id[16728]
+//      Workboy Id[603863]
+//      Doodi Id[683837]
+
+    when
+        pkg : MsgPacket(pkg.getCharacterId()==16728 || pkg.getCharacterId()==603863 || pkg.getCharacterId()==683837)
+    then
+    	session.write(pkg.getReply("you are admin"));
+end
+
+
+
+rule "Echo"
+
+    when
+        pkg : MsgPacket(command matches "echo")
+    then
+  		session.write(pkg.getReply(pkg.getMsg()));
+end
