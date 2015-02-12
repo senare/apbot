@@ -1,0 +1,2 @@
+\deployments merge=ours
+\.openshift merge=ours
