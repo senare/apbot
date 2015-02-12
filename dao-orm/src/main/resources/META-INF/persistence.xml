@@ -4,7 +4,10 @@
 		<description></description>
 
 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-      	<jta-data-source>java:/jdbc/apbot-stage</jta-data-source>
+      	<!-- 
+	      	 <jta-data-source>java:/jdbc/apbot-stage</jta-data-source>
+      	 -->
+      	<jta-data-source>java:jboss/datasources/MySQLDS</jta-data-source>
 
 		<class>ao.apbot.domain.Bot</class>
 		<class>ao.apbot.domain.Employee</class>
