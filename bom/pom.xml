@@ -63,8 +63,8 @@
 							<Dependencies>org.slf4j</Dependencies>
 						</manifestEntries>
 					</archive>
-					<outputDirectory>../deployments</outputDirectory>
-					<warName>apbot</warName>
+					<outputDirectory>deployments</outputDirectory>
+					<warName>APBOT</warName>
 				</configuration>
 			</plugin>
 			<plugin>
