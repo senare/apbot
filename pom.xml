@@ -81,37 +81,6 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.wildfly.plugins</groupId>
-				<artifactId>wildfly-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>deploy_jdbc_driver</id>
-						<phase>package</phase>
-						<goals>
-							<goal>deploy-artifact</goal>
-						</goals>
-						<configuration>
-							<groupId>${mysql.groupId}</groupId>
-							<artifactId>${mysql.artifactId}</artifactId>
-							<name>${mysql.artifactId}-${mysql.driver.version}.jar</name>
-
-							<hostname>${OPENSHIFT_WILDFLY_IP}</hostname>
-							<port>${OPENSHIFT_WILDFLY_MANAGEMENT_PORT}</port>
-							<username>${OPENSHIFT_WILDFLY_USERNAME}</username>
-							<password>${OPENSHIFT_WILDFLY_PASSWORD}</password>
-
-						</configuration>
-					</execution>
-					<!-- <execution> <id>add_datasource</id> <phase>package</phase> <goals> 
-						<goal>add-resource</goal> </goals> <configuration> <address>subsystem=datasources,data-source=myDS</address> 
-						<resources> <resource> <properties> <connection-url>${db.jdbc.url}</connection-url> 
-						<jndi-name>java:/jdbc/apbot-stage</jndi-name> <enabled>true</enabled> <enable>true</enable> 
-						<user-name>${mysql.username}</user-name> <password>${mysql.password}</password> 
-						<driver-name>${mysql.driver.name}</driver-name> <use-ccm>false</use-ccm> 
-						</properties> </resource> </resources> </configuration> </execution> -->
-				</executions>
-			</plugin>
 		</plugins>
 	</build>
 	<profiles>
@@ -126,6 +95,37 @@
 							<outputDirectory>deployments</outputDirectory>
 							<warName>ROOT</warName>
 						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.wildfly.plugins</groupId>
+						<artifactId>wildfly-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>deploy_jdbc_driver</id>
+								<phase>package</phase>
+								<goals>
+									<goal>deploy-artifact</goal>
+								</goals>
+								<configuration>
+									<groupId>${mysql.groupId}</groupId>
+									<artifactId>${mysql.artifactId}</artifactId>
+									<name>${mysql.artifactId}-${mysql.driver.version}.jar</name>
+
+									<hostname>${OPENSHIFT_WILDFLY_IP}</hostname>
+									<port>${OPENSHIFT_WILDFLY_MANAGEMENT_PORT}</port>
+									<username>${OPENSHIFT_WILDFLY_USERNAME}</username>
+									<password>${OPENSHIFT_WILDFLY_PASSWORD}</password>
+
+								</configuration>
+							</execution>
+							<!-- <execution> <id>add_datasource</id> <phase>package</phase> <goals> 
+								<goal>add-resource</goal> </goals> <configuration> <address>subsystem=datasources,data-source=myDS</address> 
+								<resources> <resource> <properties> <connection-url>${db.jdbc.url}</connection-url> 
+								<jndi-name>java:/jdbc/apbot-stage</jndi-name> <enabled>true</enabled> <enable>true</enable> 
+								<user-name>${mysql.username}</user-name> <password>${mysql.password}</password> 
+								<driver-name>${mysql.driver.name}</driver-name> <use-ccm>false</use-ccm> 
+								</properties> </resource> </resources> </configuration> </execution> -->
+						</executions>
 					</plugin>
 				</plugins>
 			</build>
