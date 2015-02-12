@@ -12,6 +12,7 @@
         <module>dao-orm</module>
         <module>rules</module>
     </modules>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <ao.apbot.version>0.0.2-SNAPSHOT</ao.apbot.version>
