@@ -63,6 +63,7 @@
 							<Dependencies>org.slf4j</Dependencies>
 						</manifestEntries>
 					</archive>
+					<warName>APBOT</warName>
 				</configuration>
 			</plugin>
 			<plugin>
