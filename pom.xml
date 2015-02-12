@@ -5,6 +5,7 @@
     <version>0.0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>APBot - A Perfect Bot</name>
+
     <modules>
         <module>bom</module>
         <module>com-core</module>
