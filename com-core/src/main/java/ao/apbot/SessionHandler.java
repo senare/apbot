@@ -5,13 +5,12 @@ import java.util.Calendar;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
+import org.jboss.logging.Logger;
 import org.kie.api.KieServices;
 import org.kie.api.builder.Message;
 import org.kie.api.builder.Results;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import ao.apbot.codec.Fact;
 import ao.apbot.codec.MsgPacket;
@@ -27,106 +26,110 @@ import ao.apbot.pkg.auth.PingPacket;
 
 public class SessionHandler extends IoHandlerAdapter {
 
-	private final static Logger log = LoggerFactory.getLogger(SessionHandler.class);
+    private final static Logger LOGGER = Logger.getLogger(SessionHandler.class);
 
-	private String password;
-	private String username;
-	private String handle;
+    private String password;
+    private String username;
+    private String handle;
 
-	private KieContainer kc;
+    private KieContainer kc;
 
-	private AoChatBot aoChatBot;
+    private AoChatBot aoChatBot;
 
-	public SessionHandler(Bot bot, AoChatBot aoChatBot) {
-		this.aoChatBot = aoChatBot;
-		this.handle = bot.getName();
-		this.username = bot.getUser();
-		this.password = bot.getPassword();
+    public SessionHandler(Bot bot, AoChatBot aoChatBot) {
+        this.aoChatBot = aoChatBot;
+        this.handle = bot.getName();
+        this.username = bot.getUser();
+        this.password = bot.getPassword();
 
-		KieServices ks = KieServices.Factory.get();
-		this.kc = ks.getKieClasspathContainer();
+        KieServices ks = KieServices.Factory.get();
+        this.kc = ks.getKieClasspathContainer();
 
-		Results results = this.kc.verify();
-		for (Message msg : results.getMessages()) {
-			log.info(msg.toString() + "  " + msg.getText());
-		}
-	}
+        Results results = this.kc.verify();
+        for (Message msg : results.getMessages()) {
+            LOGGER.info(msg.toString() + "  " + msg.getText());
+        }
+    }
 
-	@Override
-	public void messageReceived(IoSession session, Object message) {
-		log.info("{} received {}", handle, message);
+    @Override
+    public void messageReceived(IoSession session, Object message) {
+        try {
+            LOGGER.infof("%s received %s", handle, message);
 
-		if (message instanceof MsgPacket) {
-			log.info("MsgPacket [{}]", ((MsgPacket) message).getMsg());
-		}
+            if (message instanceof MsgPacket) {
+                LOGGER.infof("MsgPacket [%s]", ((MsgPacket) message).getMsg());
+            }
 
-		if (message instanceof Fact) {
-			Fact pkg = (Fact) message;
-			switch (pkg.getType()) {
-			case PingPacket.TYPE:
-				session.write(new PingPacket(((PingPacket) pkg).getMessage()));
-				break;
-			case LoginSeedPacket.TYPE:
-				session.write(new LoginRequestPacket((LoginSeedPacket) pkg, username, password));
-				break;
-			case CharacterListPacket.TYPE:
-				session.write(new LoginSelectPacket((CharacterListPacket) pkg, handle));
-				break;
-			case LoginOkPacket.TYPE:
-				log.info("{} has logged on", handle);
-				break;
-			case LoginErrorPacket.TYPE:
-				log.info("{} failed to logon", handle);
-				break;
-			default:
+            if (message instanceof Fact) {
+                Fact pkg = (Fact) message;
+                switch (pkg.getType()) {
+                case PingPacket.TYPE:
+                    session.write(new PingPacket(((PingPacket) pkg).getMessage()));
+                    break;
+                case LoginSeedPacket.TYPE:
+                    session.write(new LoginRequestPacket((LoginSeedPacket) pkg, username, password));
+                    break;
+                case CharacterListPacket.TYPE:
+                    session.write(new LoginSelectPacket((CharacterListPacket) pkg, handle));
+                    break;
+                case LoginOkPacket.TYPE:
+                    LOGGER.infof("%s has logged on", handle);
+                    break;
+                case LoginErrorPacket.TYPE:
+                    LOGGER.infof("%s failed to logon", handle);
+                    break;
+                default:
 
-				if (pkg instanceof MsgPacket) {
-					log.debug("Command " + ((MsgPacket) pkg).getCommand());
-					for (int i = 0; i < ((MsgPacket) pkg).getNoParams(); i++) {
-						log.debug("Param {} = {} ", i, ((MsgPacket) pkg).getParam(i));
-					}
-				}
-				
-				KieSession ksession = kc.newKieSession("APbotSession");
+                    if (pkg instanceof MsgPacket) {
+                        LOGGER.debug("Command " + ((MsgPacket) pkg).getCommand());
+                        for (int i = 0; i < ((MsgPacket) pkg).getNoParams(); i++) {
+                            LOGGER.debugf("Param %s = %s ", i, ((MsgPacket) pkg).getParam(i));
+                        }
+                    }
 
-				// map for all bot's, or something ??
-				ksession.setGlobal("session", session);
-				ksession.setGlobal("manager", aoChatBot);
+                    KieSession ksession = kc.newKieSession("APbotSession");
 
-				ksession.insert(new TimeFact(Calendar.getInstance()));
-				ksession.insert(pkg);
-				ksession.fireAllRules();
-				ksession.dispose();
-			}
-		} else {
-			session.close(true);
-		}
-	}
+                    // map for all bot's, or something ??
+                    ksession.setGlobal("session", session);
+                    ksession.setGlobal("manager", aoChatBot);
 
-	@Override
-	public void sessionOpened(IoSession session) {
-		log.info("{} connect", handle);
-	}
+                    ksession.insert(new TimeFact(Calendar.getInstance()));
+                    ksession.insert(pkg);
+                    ksession.fireAllRules();
+                    ksession.dispose();
+                }
+            } else {
+                session.close(true);
+            }
+        } catch (Exception x) {
+            LOGGER.errorf(x, "%s received %s", handle, message);
+        }
+    }
 
-	@Override
-	public void sessionClosed(IoSession session) throws Exception {
-		log.info("{} dissconnect", handle);
-	}
+    @Override
+    public void sessionOpened(IoSession session) {
+        LOGGER.infof("%s connect", handle);
+    }
 
-	@Override
-	public void messageSent(IoSession session, Object message) throws Exception {
-		log.info("{} sent {}", handle, message);
-	};
+    @Override
+    public void sessionClosed(IoSession session) throws Exception {
+        LOGGER.infof("%s dissconnect", handle);
+    }
 
-	@Override
-	public void sessionIdle(IoSession session, IdleStatus status) throws Exception {
-		log.info("{} idle {}", handle, status);
-		session.write(new PingPacket("Java AOChat API ping"));
-	}
+    @Override
+    public void messageSent(IoSession session, Object message) throws Exception {
+        LOGGER.infof("%s sent %s", handle, message);
+    };
 
-	@Override
-	public void exceptionCaught(IoSession session, Throwable cause) {
-		log.error("Client caught exception ", cause);
-		session.close(true);
-	}
+    @Override
+    public void sessionIdle(IoSession session, IdleStatus status) throws Exception {
+        LOGGER.infof("%s idle %s", handle, status);
+        session.write(new PingPacket("Java AOChat API ping"));
+    }
+
+    @Override
+    public void exceptionCaught(IoSession session, Throwable cause) {
+        LOGGER.error("Client caught exception ", cause);
+        session.close(true);
+    }
 }
