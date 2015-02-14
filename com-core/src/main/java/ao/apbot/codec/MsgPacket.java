@@ -59,7 +59,7 @@ public abstract class MsgPacket extends Fact {
         if (params.size() < 1)
             this.split();
 
-        if (params.isEmpty() || params.size() >= index) {
+        if (params.isEmpty() || params.size() <= index) {
             return null;
         }
         return params.get(index);

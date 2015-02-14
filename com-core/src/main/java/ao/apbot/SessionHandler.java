@@ -82,7 +82,7 @@ public class SessionHandler extends IoHandlerAdapter {
 
                     if (pkg instanceof MsgPacket) {
                         LOGGER.debug("Command " + ((MsgPacket) pkg).getCommand());
-                        for (int i = 0; i < ((MsgPacket) pkg).getNoParams(); i++) {
+                        for (int i = 0; i <= ((MsgPacket) pkg).getNoParams(); i++) {
                             LOGGER.debugf("Param %s = %s ", i, ((MsgPacket) pkg).getParam(i));
                         }
                     }
