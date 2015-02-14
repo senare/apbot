@@ -70,36 +70,100 @@ public class AoChatBot implements ProtocolCodecFactory {
     }
 
     public void newBot(String name, String username, String password, String template) {
-        bm.newBot(name, username, password, template);
-    }
+        try {
+            StringBuffer error = new StringBuffer();
 
-    public void active(String name, boolean active) throws Exception {
-        bm.active(name, active);
-    }
-
-    public void kill(String name) throws Exception {
-        if (network.containsKey(name)) {
-            IoSession ioSession = network.get(name);
-            synchronized (network) {
-                ioSession.close(true);
-                network.remove(name);
+            if (name == null) {
+                error.append(" Name can't be null ");
             }
-            LOGGER.debugf("Halt %s ", name);
-        } else {
-            LOGGER.debugf("No such handle running %s ", name);
+            if (username == null) {
+                error.append(" Username can't be null ");
+            }
+            if (password == null) {
+                error.append(" Password can't be null ");
+            }
+            if (template == null) {
+                error.append(" Template can't be null ");
+            }
+
+            if (error.length() != 0) {
+                LOGGER.error(error);
+            } else {
+                bm.newBot(name, username, password, template);
+            }
+        } catch (Exception x) {
+            LOGGER.errorf(x, "new bot failed");
         }
     }
 
-    public void spawn(String name) throws Exception {
-        List<Bot> bots = bm.load(name);
-        if (bots.size() == 1) {
-            spawn(bots.get(0));
-        } else {
-            if (bots.isEmpty()) {
-                LOGGER.debugf("No such bot defined %f  ", name);
-            } else {
-                LOGGER.debugf("Unbigious %s found %s instances", name, bots.size());
+    public void active(String name, boolean active) {
+        try {
+            StringBuffer error = new StringBuffer();
+
+            if (name == null) {
+                error.append(" Name can't be null ");
             }
+
+            if (error.length() != 0) {
+                LOGGER.error(error);
+            } else {
+                bm.active(name, active);
+            }
+        } catch (Exception x) {
+            LOGGER.errorf(x, "activate bot failed");
+        }
+    }
+
+    public void kill(String name) {
+        try {
+            StringBuffer error = new StringBuffer();
+
+            if (name == null) {
+                error.append(" Name can't be null ");
+            }
+
+            if (error.length() != 0) {
+                LOGGER.error(error);
+            } else if (network.containsKey(name)) {
+                IoSession ioSession = network.get(name);
+                synchronized (network) {
+                    ioSession.close(true);
+                    network.remove(name);
+                }
+                LOGGER.debugf("Halt %s ", name);
+            } else {
+                LOGGER.debugf("No such handle running %s ", name);
+            }
+        } catch (Exception x) {
+            LOGGER.errorf(x, "kill bot failed");
+        }
+    }
+
+    public void spawn(String name) {
+        try {
+
+            StringBuffer error = new StringBuffer();
+
+            if (name == null) {
+                error.append(" Name can't be null ");
+            }
+
+            if (error.length() != 0) {
+                LOGGER.error(error);
+            } else {
+                List<Bot> bots = bm.load(name);
+                if (bots.size() == 1) {
+                    spawn(bots.get(0));
+                } else {
+                    if (bots.isEmpty()) {
+                        LOGGER.debugf("No such bot defined %s ", name, bots.size());
+                    } else {
+                        LOGGER.debugf("Unbigious %s found %s instances", name, bots.size());
+                    }
+                }
+            }
+        } catch (Exception x) {
+            LOGGER.errorf(x, "kill bot failed");
         }
     }
 
