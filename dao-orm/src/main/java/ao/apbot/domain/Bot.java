@@ -5,85 +5,87 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "user" }))
 public class Bot {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	private String chatId;
-	private String name;
-	private String user;
-	private String password;
-	private String template;
+    private String chatId;
 
-	private boolean active = false;
+    private String name;
+    private String user;
+    private String password;
+    private String template;
 
-	public Bot() {
-	}
+    private boolean active = false;
 
-	public Bot(String name, String user, String password) {
-		this.name = name;
-		this.user = user;
-		this.password = password;
-	}
+    public Bot() {
+    }
 
-	public Bot(String name, String user, String password, String template) {
-		this.name = name;
-		this.user = user;
-		this.password = password;
-		this.template = template;
-		this.active = true;
-	}
+    public Bot(String name, String user, String password) {
+        this.name = name;
+        this.user = user;
+        this.password = password;
+    }
 
-	public String getChatId() {
-		return chatId;
-	}
+    public Bot(String name, String user, String password, String template) {
+        this.name = name;
+        this.user = user;
+        this.password = password;
+        this.template = template;
+        this.active = true;
+    }
 
-	public void setChatId(String chatId) {
-		this.chatId = chatId;
-	}
+    public String getChatId() {
+        return chatId;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setChatId(String chatId) {
+        this.chatId = chatId;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getUser() {
-		return user;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setUser(String user) {
-		this.user = user;
-	}
+    public String getUser() {
+        return user;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public void setUser(String user) {
+        this.user = user;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public String getTemplate() {
-		return template;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	public void setTemplate(String template) {
-		this.template = template;
-	}
+    public String getTemplate() {
+        return template;
+    }
 
-	public boolean isActive() {
-		return active;
-	}
+    public void setTemplate(String template) {
+        this.template = template;
+    }
 
-	public void setActive(boolean active) {
-		this.active = active;
-	}
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 }
