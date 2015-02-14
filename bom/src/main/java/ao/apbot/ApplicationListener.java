@@ -4,15 +4,13 @@ import javax.inject.Inject;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.jboss.logging.Logger;
 
-import ao.apbot.domain.Bot;
 import ao.apbot.jpa.BotManager;
 
 public class ApplicationListener implements ServletContextListener {
 
-	private static Logger log = LoggerFactory.getLogger(ApplicationListener.class);
+	private static Logger LOGGER = Logger.getLogger(ApplicationListener.class);
 
 	private static AoChatBot botFactory = new AoChatBot();
 
@@ -21,11 +19,11 @@ public class ApplicationListener implements ServletContextListener {
 
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
-		log.info("Starting A perfect bot ...");
+		LOGGER.info("Starting A perfect bot ...");
 		try {
 			botFactory.spawn(botManager);
 		} catch (Exception x) {
-			log.error("Failed to start apbot", x);
+			LOGGER.error("Failed to start apbot", x);
 		}
 	}
 
