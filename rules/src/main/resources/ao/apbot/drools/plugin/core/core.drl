@@ -1,4 +1,4 @@
-package apbot
+package ao.apbot.drools.plugin.core
 
 import java.util.Calendar;
 import ao.apbot.codec.*;
@@ -8,6 +8,14 @@ import ao.apbot.*;
 global org.apache.mina.core.session.IoSession session;
 
 dialect  "mvel"
+
+rule "help"
+
+    when
+        pkg : MsgPacket(command matches "help")
+    then
+    	session.write(pkg.getReply("Core commands: ECHO TIME "));
+end
 
 rule "Auth"
 
