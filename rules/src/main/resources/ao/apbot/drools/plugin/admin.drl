@@ -10,6 +10,14 @@ global ao.apbot.AoChatBot manager;
 
 dialect  "mvel"
 
+rule "help"
+
+    when
+        pkg : MsgPacket(command matches "update")
+    then
+    	session.write(pkg.getReply(" COMMANDS: CREATE ACTIVE DEACTIVATE SPAWN KILL UPDATE "));
+end
+
 rule "Create bot"
 
     when
@@ -82,3 +90,4 @@ rule "Update bot"
     		session.write(pkg.getReply(" UPDATE name user SET template name user password "));
        }
 end
+
