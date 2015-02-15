@@ -15,8 +15,7 @@ rule "Create bot"
     when
         pkg : MsgPacket(command matches "create")
     then
-		manager.newBot(pkg.getParam(2), pkg.getParam(3), pkg.getParam(4), pkg.getParam(1));
-  		session.write(pkg.getReply("Created bot " +pkg.getParam(2)));
+  		session.write(pkg.getReply(manager.newBot(pkg.getParam(2), pkg.getParam(3), pkg.getParam(4), pkg.getParam(1))));
 end
 
 rule "Activate bot"
@@ -24,8 +23,7 @@ rule "Activate bot"
     when
         pkg : MsgPacket(command matches "activate")
     then
-		manager.active(pkg.getParam(1), true);
-  		session.write(pkg.getReply("Activate bot " + pkg.getParam(1)));
+  		session.write(pkg.getReply(manager.active(pkg.getParam(1), true)));
 end
 
 rule "Deactivate bot"
@@ -33,8 +31,7 @@ rule "Deactivate bot"
     when
         pkg : MsgPacket(command matches "deactivate")
     then
-		manager.active(pkg.getParam(1), false);
-  		session.write(pkg.getReply("Deactivate bot " + pkg.getParam(1)));
+		session.write(pkg.getReply(manager.active(pkg.getParam(1), false)));
 end
 
 rule "Spawn bot"
@@ -42,8 +39,7 @@ rule "Spawn bot"
     when
         pkg : MsgPacket(command matches "spawn")
     then
-		manager.spawn(pkg.getParam(1));
-  		session.write(pkg.getReply("Spawning "+pkg.getParam(1)));
+  		session.write(pkg.getReply(manager.spawn(pkg.getParam(1))));
 end
 
 rule "Kill bot"
@@ -51,7 +47,6 @@ rule "Kill bot"
     when
         pkg : MsgPacket(command matches "kill")
     then
-    	manager.kill(pkg.getParam(1));
-  		session.write(pkg.getReply("Terminating " +pkg.getParam(1)));
+  		session.write(pkg.getReply(manager.kill(pkg.getParam(1))));
 end
 

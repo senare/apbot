@@ -69,61 +69,67 @@ public class AoChatBot implements ProtocolCodecFactory {
         }
     }
 
-    public void newBot(String name, String username, String password, String template) {
+    public String newBot(String name, String username, String password, String template) {
+        StringBuffer replay = new StringBuffer();
         try {
-            StringBuffer error = new StringBuffer();
 
             if (name == null) {
-                error.append(" Name can't be null ");
+                replay.append(" Name can't be null ");
             }
             if (username == null) {
-                error.append(" Username can't be null ");
+                replay.append(" Username can't be null ");
             }
             if (password == null) {
-                error.append(" Password can't be null ");
+                replay.append(" Password can't be null ");
             }
             if (template == null) {
-                error.append(" Template can't be null ");
+                replay.append(" Template can't be null ");
             }
 
-            if (error.length() != 0) {
-                LOGGER.error(error);
+            if (replay.length() != 0) {
+                LOGGER.error(replay);
+                return replay.toString();
             } else {
                 bm.newBot(name, username, password, template);
+                return String.format("Created bot %s ", name);
             }
         } catch (Exception x) {
             LOGGER.errorf(x, "new bot failed");
+            return replay.toString();
         }
     }
 
-    public void active(String name, boolean active) {
+    public String active(String name, boolean active) {
+        StringBuffer replay = new StringBuffer();
         try {
-            StringBuffer error = new StringBuffer();
 
             if (name == null) {
-                error.append(" Name can't be null ");
+                replay.append(" Name can't be null ");
             }
 
-            if (error.length() != 0) {
-                LOGGER.error(error);
+            if (replay.length() != 0) {
+                LOGGER.error(replay);
+                return replay.toString();
             } else {
                 bm.active(name, active);
+                return String.format("%s bot %s", (active ? "Activate" : "Deactivate"), name);
             }
         } catch (Exception x) {
-            LOGGER.errorf(x, "activate bot failed");
+            LOGGER.errorf(x, "Change state failed");
+            return replay.toString();
         }
     }
 
-    public void kill(String name) {
+    public String kill(String name) {
+        StringBuffer replay = new StringBuffer();
         try {
-            StringBuffer error = new StringBuffer();
-
             if (name == null) {
-                error.append(" Name can't be null ");
+                replay.append(" Name can't be null ");
             }
 
-            if (error.length() != 0) {
-                LOGGER.error(error);
+            if (replay.length() != 0) {
+                LOGGER.error(replay);
+                return replay.toString();
             } else if (network.containsKey(name)) {
                 IoSession ioSession = network.get(name);
                 synchronized (network) {
@@ -131,39 +137,45 @@ public class AoChatBot implements ProtocolCodecFactory {
                     network.remove(name);
                 }
                 LOGGER.debugf("Halt %s ", name);
+                return String.format("Terminating %s", name);
             } else {
                 LOGGER.debugf("No such handle running %s ", name);
+                return String.format("No such handle running %s ", name);
             }
         } catch (Exception x) {
             LOGGER.errorf(x, "kill bot failed");
+            return replay.toString();
         }
     }
 
-    public void spawn(String name) {
+    public String spawn(String name) {
+        StringBuffer replay = new StringBuffer();
         try {
-
-            StringBuffer error = new StringBuffer();
-
             if (name == null) {
-                error.append(" Name can't be null ");
+                replay.append(" Name can't be null ");
             }
 
-            if (error.length() != 0) {
-                LOGGER.error(error);
+            if (replay.length() != 0) {
+                LOGGER.error(replay);
+                return replay.toString();
             } else {
                 List<Bot> bots = bm.load(name);
                 if (bots.size() == 1) {
                     spawn(bots.get(0));
+                    return String.format("Spawning %s", name);
                 } else {
                     if (bots.isEmpty()) {
-                        LOGGER.debugf("No such bot defined %s ", name, bots.size());
+                        LOGGER.debugf("No such bot defined %s ", name);
+                        return String.format("No such bot defined %s ", name);
                     } else {
                         LOGGER.debugf("Unbigious %s found %s instances", name, bots.size());
+                        return String.format("Unbigious %s found %s instances", name, bots.size());
                     }
                 }
             }
         } catch (Exception x) {
             LOGGER.errorf(x, "kill bot failed");
+            return replay.toString();
         }
     }
 
