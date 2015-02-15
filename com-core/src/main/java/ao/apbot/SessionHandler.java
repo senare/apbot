@@ -32,6 +32,8 @@ public class SessionHandler extends IoHandlerAdapter {
     private String username;
     private String handle;
 
+    private String kbase;
+
     private KieContainer kc;
 
     private AoChatBot aoChatBot;
@@ -41,6 +43,8 @@ public class SessionHandler extends IoHandlerAdapter {
         this.handle = bot.getName();
         this.username = bot.getUser();
         this.password = bot.getPassword();
+
+        this.kbase = bot.getTemplate() + "Session";
 
         KieServices ks = KieServices.Factory.get();
         this.kc = ks.getKieClasspathContainer();
@@ -87,7 +91,7 @@ public class SessionHandler extends IoHandlerAdapter {
                         }
                     }
 
-                    KieSession ksession = kc.newKieSession("APbotSession");
+                    KieSession ksession = kc.newKieSession(kbase);
 
                     // map for all bot's, or something ??
                     ksession.setGlobal("session", session);

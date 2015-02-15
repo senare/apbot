@@ -1,4 +1,4 @@
-package apbot
+package ao.apbot.drools.plugin.admin
 
 import java.util.Calendar;
 import ao.apbot.codec.*;
@@ -15,7 +15,7 @@ rule "help"
     when
         pkg : MsgPacket(command matches "help")
     then
-    	session.write(pkg.getReply(" COMMANDS: CREATE ACTIVE DEACTIVATE SPAWN KILL UPDATE "));
+    	session.write(pkg.getReply("Admin commands: CREATE ACTIVE DEACTIVATE SPAWN KILL UPDATE "));
 end
 
 rule "Create bot"
