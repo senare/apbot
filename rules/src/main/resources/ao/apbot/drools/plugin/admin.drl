@@ -18,7 +18,7 @@ rule "Create bot"
     if(pkg.getNoParams() == 4){
   		session.write(pkg.getReply(manager.newBot(pkg.getParam(2), pkg.getParam(3), pkg.getParam(4), pkg.getParam(1))));
     }else{
-    	session.write(pkg.getReply(" create <template> <name> <user> <password> "));
+    	session.write(pkg.getReply(" create &lt;template&gt; &lt;name&gt; &lt;user&gt; &lt;password&gt; "));
     }
 end
 
@@ -30,7 +30,7 @@ rule "Activate bot"
  	   if(pkg.getNoParams() == 1){
   			session.write(pkg.getReply(manager.active(pkg.getParam(1), true)));
  		}else{
-    		session.write(pkg.getReply(" activate <name> "));
+    		session.write(pkg.getReply(" activate &lt;name&gt; "));
     	}
 end
 
@@ -42,7 +42,7 @@ rule "Deactivate bot"
  	   if(pkg.getNoParams() == 1){
 			session.write(pkg.getReply(manager.active(pkg.getParam(1), false)));
  		}else{
-    		session.write(pkg.getReply(" deactivate <name> "));
+    		session.write(pkg.getReply(" deactivate &lt;name&gt; "));
     	}
 end
 
@@ -54,7 +54,7 @@ rule "Spawn bot"
  	   if(pkg.getNoParams() == 1){
 	  		session.write(pkg.getReply(manager.spawn(pkg.getParam(1))));
 	   }else{
-    		session.write(pkg.getReply(" spawn <name> "));
+    		session.write(pkg.getReply(" spawn &lt;name&gt; "));
        }
 end
 
@@ -66,8 +66,19 @@ rule "Kill bot"
  	   if(pkg.getNoParams() == 1){
   			session.write(pkg.getReply(manager.kill(pkg.getParam(1))));
 	   }else{
-    		session.write(pkg.getReply(" kill <name> "));
+    		session.write(pkg.getReply(" kill &lt;name&gt; "));
        }
 
 end
 
+rule "Update bot"
+
+    when
+        pkg : MsgPacket(command matches "update")
+    then
+ 	   if(pkg.getNoParams() == 7 && (pkg.getParam(3) matches "set") ){
+  			session.write(pkg.getReply(manager.kill(pkg.getParam(1))));
+	   }else{
+    		session.write(pkg.getReply(" update &lt;name&gt; &lt;user&gt; set &lt;template&gt; &lt;name&gt; &lt;user&gt; &lt;password&gt; "));
+       }
+end
