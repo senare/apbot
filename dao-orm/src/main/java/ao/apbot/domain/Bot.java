@@ -27,10 +27,9 @@ public class Bot {
     public Bot() {
     }
 
-    public Bot(String name, String user, String password) {
+    public Bot(String name, String user) {
         this.name = name;
         this.user = user;
-        this.password = password;
     }
 
     public Bot(String name, String user, String password, String template) {

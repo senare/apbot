@@ -99,6 +99,43 @@ public class AoChatBot implements ProtocolCodecFactory {
         }
     }
 
+    public String update(String currentName, String currentUsername, String name, String username, String password, String template) {
+        StringBuffer replay = new StringBuffer();
+        try {
+
+            if (currentName == null) {
+                replay.append(" Current name can't be null ");
+            }
+            if (currentUsername == null) {
+                replay.append(" Current user can't be null ");
+            }
+
+            if (name == null) {
+                replay.append(" Name can't be null ");
+            }
+            if (username == null) {
+                replay.append(" Username can't be null ");
+            }
+            if (password == null) {
+                replay.append(" Password can't be null ");
+            }
+            if (template == null) {
+                replay.append(" Template can't be null ");
+            }
+
+            if (replay.length() != 0) {
+                LOGGER.error(replay);
+                return replay.toString();
+            } else {
+                bm.update(currentName, currentUsername, name, username, password, template);
+                return String.format("Updated %s ", name);
+            }
+        } catch (Exception x) {
+            LOGGER.errorf(x, "new bot failed");
+            return replay.toString();
+        }
+    }
+
     public String active(String name, boolean active) {
         StringBuffer replay = new StringBuffer();
         try {
