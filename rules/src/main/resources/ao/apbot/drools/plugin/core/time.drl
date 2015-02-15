@@ -1,4 +1,4 @@
-package apbot
+package ao.apbot.drools.plugin.core
 
 import java.util.Calendar;
 import ao.apbot.codec.*;
