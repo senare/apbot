@@ -11,6 +11,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import ao.apbot.domain.Bot;
 
@@ -46,10 +49,16 @@ public class BotManager {
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void update(String currentName, String currentUsername, String name, String username, String password, String template) {
-        Bot reference = entityManager.getReference(Bot.class, new Bot(currentName, currentUsername));
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Bot> query = cb.createQuery(Bot.class);
+        Root<Bot> sm = query.from(Bot.class);
+        query.where(cb.equal(sm.get("name"), currentName));
+        query.where(cb.equal(sm.get("user"), currentUsername));
+        Bot reference = entityManager.createQuery(query).getSingleResult();
         reference.setName(name);
         reference.setUser(username);
         reference.setTemplate(template);
         reference.setPassword(password);
+        entityManager.merge(reference);
     }
 }
