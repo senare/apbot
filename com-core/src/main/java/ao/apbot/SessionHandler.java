@@ -1,6 +1,9 @@
 package ao.apbot;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
@@ -36,10 +39,9 @@ public class SessionHandler extends IoHandlerAdapter {
 
     private KieContainer kc;
 
-    private AoChatBot aoChatBot;
+    private Map<String, Object> global = new HashMap<>();
 
     public SessionHandler(Bot bot, AoChatBot aoChatBot) {
-        this.aoChatBot = aoChatBot;
         this.handle = bot.getName();
         this.username = bot.getUser();
         this.password = bot.getPassword();
@@ -52,6 +54,10 @@ public class SessionHandler extends IoHandlerAdapter {
         Results results = this.kc.verify();
         for (Message msg : results.getMessages()) {
             LOGGER.info(msg.toString() + "  " + msg.getText());
+        }
+
+        if ("admin".equals(bot.getTemplate())) {
+            global.put("manager", aoChatBot);
         }
     }
 
@@ -92,10 +98,11 @@ public class SessionHandler extends IoHandlerAdapter {
                     }
 
                     KieSession ksession = kc.newKieSession(kbase);
-
-                    // map for all bot's, or something ??
                     ksession.setGlobal("session", session);
-                    ksession.setGlobal("manager", aoChatBot);
+
+                    for (Entry<String, Object> entry : global.entrySet()) {
+                        ksession.setGlobal(entry.getKey(), entry.getValue());
+                    }
 
                     ksession.insert(new TimeFact(Calendar.getInstance()));
                     ksession.insert(pkg);
