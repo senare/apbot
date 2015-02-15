@@ -69,37 +69,113 @@ public class AoChatBot implements ProtocolCodecFactory {
         }
     }
 
-    public void newBot(String name, String username, String password, String template) {
-        bm.newBot(name, username, password, template);
-    }
+    public String newBot(String name, String username, String password, String template) {
+        StringBuffer replay = new StringBuffer();
+        try {
 
-    public void active(String name, boolean active) throws Exception {
-        bm.active(name, active);
-    }
-
-    public void kill(String name) throws Exception {
-        if (network.containsKey(name)) {
-            IoSession ioSession = network.get(name);
-            synchronized (network) {
-                ioSession.close(true);
-                network.remove(name);
+            if (name == null) {
+                replay.append(" Name can't be null ");
             }
-            LOGGER.debugf("Halt %s ", name);
-        } else {
-            LOGGER.debugf("No such handle running %s ", name);
+            if (username == null) {
+                replay.append(" Username can't be null ");
+            }
+            if (password == null) {
+                replay.append(" Password can't be null ");
+            }
+            if (template == null) {
+                replay.append(" Template can't be null ");
+            }
+
+            if (replay.length() != 0) {
+                LOGGER.error(replay);
+                return replay.toString();
+            } else {
+                bm.newBot(name, username, password, template);
+                return String.format("Created bot %s ", name);
+            }
+        } catch (Exception x) {
+            LOGGER.errorf(x, "new bot failed");
+            return replay.toString();
         }
     }
 
-    public void spawn(String name) throws Exception {
-        List<Bot> bots = bm.load(name);
-        if (bots.size() == 1) {
-            spawn(bots.get(0));
-        } else {
-            if (bots.isEmpty()) {
-                LOGGER.debugf("No such bot defined %f  ", name);
-            } else {
-                LOGGER.debugf("Unbigious %s found %s instances", name, bots.size());
+    public String active(String name, boolean active) {
+        StringBuffer replay = new StringBuffer();
+        try {
+
+            if (name == null) {
+                replay.append(" Name can't be null ");
             }
+
+            if (replay.length() != 0) {
+                LOGGER.error(replay);
+                return replay.toString();
+            } else {
+                bm.active(name, active);
+                return String.format("%s bot %s", (active ? "Activate" : "Deactivate"), name);
+            }
+        } catch (Exception x) {
+            LOGGER.errorf(x, "Change state failed");
+            return replay.toString();
+        }
+    }
+
+    public String kill(String name) {
+        StringBuffer replay = new StringBuffer();
+        try {
+            if (name == null) {
+                replay.append(" Name can't be null ");
+            }
+
+            if (replay.length() != 0) {
+                LOGGER.error(replay);
+                return replay.toString();
+            } else if (network.containsKey(name)) {
+                IoSession ioSession = network.get(name);
+                synchronized (network) {
+                    ioSession.close(true);
+                    network.remove(name);
+                }
+                LOGGER.debugf("Halt %s ", name);
+                return String.format("Terminating %s", name);
+            } else {
+                LOGGER.debugf("No such handle running %s ", name);
+                return String.format("No such handle running %s ", name);
+            }
+        } catch (Exception x) {
+            LOGGER.errorf(x, "kill bot failed");
+            return replay.toString();
+        }
+    }
+
+    public String spawn(String name) {
+        StringBuffer replay = new StringBuffer();
+        try {
+            if (name == null) {
+                replay.append(" Name can't be null ");
+            }
+
+            if (replay.length() != 0) {
+                LOGGER.error(replay);
+                return replay.toString();
+            } else {
+                List<Bot> bots = bm.load(name);
+                if (bots.size() == 1) {
+                    spawn(bots.get(0));
+                    return String.format("Spawning %s", name);
+                } else {
+                    if (bots.isEmpty()) {
+                        LOGGER.debugf("No such bot defined %s ", name);
+                        return String.format("No such bot defined %s ", name);
+                    } else {
+                        LOGGER.debugf("Unbigious %s found %s instances", name, bots.size());
+                        return String.format("Unbigious %s found %s instances", name, bots.size());
+                    }
+                }
+            }
+        } catch (Exception x) {
+            LOGGER.errorf(x, "kill bot failed");
+            return replay.toString();
         }
     }
 
