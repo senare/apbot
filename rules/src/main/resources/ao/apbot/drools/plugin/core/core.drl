@@ -39,7 +39,24 @@ rule "Echo"
   		session.write(pkg.getReply(pkg.getMsg()));
 end
 
-rule "test"
+rule "test join"
+
+    when
+        pkg : MsgPacket(command matches "test-join")
+    then
+  		session.write(new PrivateMessagePacket(45212, "join"));
+end
+
+rule "test accept"
+
+    when
+        pkg : MsgPacket(command matches "test-accept")
+    then
+  		session.write(new PrivateChannelAcceptPacket(45212));
+end
+
+
+rule "test lvl"
 
     when
         pkg : MsgPacket(command matches "test-lvl")
