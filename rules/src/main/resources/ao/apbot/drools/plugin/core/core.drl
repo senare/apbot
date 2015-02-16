@@ -38,3 +38,11 @@ rule "Echo"
     then
   		session.write(pkg.getReply(pkg.getMsg()));
 end
+
+rule "test"
+
+    when
+        pkg : MsgPacket(command matches "test")
+    then
+  		session.write(new CharacterLookupPacket("Bobsan"));
+end
