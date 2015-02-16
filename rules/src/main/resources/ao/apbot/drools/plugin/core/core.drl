@@ -38,3 +38,48 @@ rule "Echo"
     then
   		session.write(pkg.getReply(pkg.getMsg()));
 end
+
+rule "test join"
+
+    when
+        pkg : MsgPacket(command matches "test-join")
+    then
+  		session.write(new PrivateMessagePacket(45212, "join"));
+end
+
+rule "test accept"
+
+    when
+        pkg : MsgPacket(command matches "test-accept")
+    then
+  		session.write(new PrivateChannelAcceptPacket(45212));
+end
+
+
+rule "test lvl"
+
+    when
+        pkg : MsgPacket(command matches "test-lvl")
+    then
+  		session.write(new PrivateMessagePacket(45212, "lvl 200"));
+end
+
+
+rule "box"
+
+    when
+        pkg : MsgPacket(command matches "test-whois")
+    then
+  		session.write(new PrivateMessagePacket(45212, "whois Bobsan"));
+end
+
+rule "format"
+    when
+        pkg : MsgPacket(command matches "test-format")
+    then
+		session.write(pkg.getReply("<font color=#DEDE42><font color=#DEDE42>L <font color=#FFFF00>200</font>: team 145-220  |  PvP 159-220  |  80000 SK  |  missions<font color=#66CCFF> 140 150 160 170 180 200 220 240 250</font></font></font>"));
+end
+
+
+
+
