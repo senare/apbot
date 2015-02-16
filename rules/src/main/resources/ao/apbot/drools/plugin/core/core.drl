@@ -38,3 +38,20 @@ rule "Echo"
     then
   		session.write(pkg.getReply(pkg.getMsg()));
 end
+
+rule "test"
+
+    when
+        pkg : MsgPacket(command matches "test-lvl")
+    then
+  		session.write(new PrivateMessagePacket(45212, "lvl 200"));
+end
+
+
+rule "box"
+
+    when
+        pkg : MsgPacket(command matches "test-whois")
+    then
+  		session.write(new PrivateMessagePacket(45212, "whois Bobsan"));
+end
