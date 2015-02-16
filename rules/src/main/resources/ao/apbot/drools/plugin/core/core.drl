@@ -72,3 +72,14 @@ rule "box"
     then
   		session.write(new PrivateMessagePacket(45212, "whois Bobsan"));
 end
+
+rule "format"
+    when
+        pkg : MsgPacket(command matches "test-format")
+    then
+		session.write(pkg.getReply("<font color=#DEDE42><font color=#DEDE42>L <font color=#FFFF00>200</font>: team 145-220  |  PvP 159-220  |  80000 SK  |  missions<font color=#66CCFF> 140 150 160 170 180 200 220 240 250</font></font></font>"));
+end
+
+
+
+
