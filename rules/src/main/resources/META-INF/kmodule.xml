@@ -1,8 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<kmodule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://jboss.org/kie/6.0.0/kmodule">
+<kmodule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://jboss.org/kie/6.0.0/kmodule">
 
-	<kbase name="apbot" packages="ao.apbot.drools.plugin">
-		<ksession name="APbotSession" />
+	<kbase name="core" packages="ao.apbot.drools.plugin.core">
+		<ksession name="coreSession" />
+	</kbase>
+
+	<kbase name="admin" packages="ao.apbot.drools.plugin.core, ao.apbot.drools.plugin.admin">
+		<ksession name="adminSession" />
+	</kbase>
+
+	<kbase name="org" packages="ao.apbot.drools.plugin.core, ao.apbot.drools.plugin.org">
+		<ksession name="orgSession" />
+	</kbase>
+
+	<kbase name="pvm" packages="ao.apbot.drools.plugin.core, ao.apbot.drools.plugin.pvm">
+		<ksession name="pvmSession" />
+	</kbase>
+
+	<kbase name="pvp" packages="ao.apbot.drools.plugin.core, ao.apbot.drools.plugin.pvp">
+		<ksession name="pvpSession" />
 	</kbase>
 
 </kmodule>

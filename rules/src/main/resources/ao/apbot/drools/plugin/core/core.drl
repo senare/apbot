@@ -1,0 +1,73 @@
+package ao.apbot.drools.plugin.core
+
+import java.util.Calendar;
+import ao.apbot.codec.*;
+import ao.apbot.pkg.*;
+import ao.apbot.*;
+
+import ao.apbot.drools.plugin.core.Level;
+
+global org.apache.mina.core.session.IoSession session;
+
+dialect  "mvel"
+
+rule "help"
+
+    when
+        pkg : MsgPacket(command matches "help")
+    then
+    	session.write(pkg.getReply("Core commands: ECHO TIME MISH LEVEL TITLELEVEL AILEVEL"));
+end
+
+rule "Auth"
+
+//      Chrisax Id[16728]
+//      Workboy Id[603863]
+//      Doodi Id[683837]
+
+    when
+        pkg : MsgPacket(pkg.getCharacterId()==16728 || pkg.getCharacterId()==603863 || pkg.getCharacterId()==683837)
+    then
+    	session.write(pkg.getReply("you are admin"));
+end
+
+rule "Echo"
+
+    when
+        pkg : MsgPacket(command matches "echo")
+    then
+  		session.write(pkg.getReply(pkg.getMsg()));
+end
+
+rule "Level"
+
+    when
+        pkg : MsgPacket(command matches "level")
+    then
+  		session.write(pkg.getReply(Level.get(pkg.getParam(1))));
+end
+
+rule "Mish"
+
+    when
+        pkg : MsgPacket(command matches "mish")
+    then
+  		session.write(pkg.getReply(Level.mish(pkg.getParam(1))));
+end
+
+rule "AiLevel"
+
+    when
+        pkg : MsgPacket(command matches "ailevel")
+    then
+  		session.write(pkg.getReply(Level.get(pkg.getParam(1))));
+end
+
+rule "TitleLevel"
+
+    when
+        pkg : MsgPacket(command matches "titlelevel")
+    then
+  		session.write(pkg.getReply(Level.get(pkg.getParam(1))));
+end
+
