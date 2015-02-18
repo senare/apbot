@@ -17,7 +17,7 @@ rule "help"
     when
         pkg : MsgPacket(command matches "help")
     then
-    	session.write(pkg.getReply("Core commands: <font color=#FFFF00> echo time mish level titlelevel ailevel oe </font>"));
+    	session.write(pkg.getReply("Core commands: <font color=#FFFF00> echo time mish level titlelevel ailevel oe calc </font>"));
 end
 
 rule "Auth"
@@ -80,3 +80,10 @@ rule "OverEquip"
   		session.write(pkg.getReply(OverEquip.get(pkg.getParam(1))));
 end
 
+rule "Calc"
+
+    when
+        pkg : MsgPacket(command matches "calc")
+    then
+        session.write(pkg.getReply(Calc.get(pkg.getParam(1))));
+end
