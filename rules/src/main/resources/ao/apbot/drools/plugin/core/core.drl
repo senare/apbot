@@ -6,6 +6,7 @@ import ao.apbot.pkg.*;
 import ao.apbot.*;
 
 import ao.apbot.drools.plugin.core.Level;
+import ao.apbot.drools.plugin.core.OverEquip;
 
 global org.apache.mina.core.session.IoSession session;
 
@@ -16,7 +17,7 @@ rule "help"
     when
         pkg : MsgPacket(command matches "help")
     then
-    	session.write(pkg.getReply("Core commands: <font color=#FFFF00> echo time mish level titlelevel ailevel </font>"));
+    	session.write(pkg.getReply("Core commands: <font color=#FFFF00> echo time mish level titlelevel ailevel oe </font>"));
 end
 
 rule "Auth"
@@ -69,5 +70,13 @@ rule "TitleLevel"
         pkg : MsgPacket(command matches "titlelevel")
     then
   		session.write(pkg.getReply(Level.get(pkg.getParam(1))));
+end
+
+rule "OverEquip"
+
+    when
+        pkg : MsgPacket(command matches "oe")
+    then
+  		session.write(pkg.getReply(OverEquip.get(pkg.getParam(1))));
 end
 
