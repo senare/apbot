@@ -281,12 +281,12 @@ public class Level {
 
         String mish = Joiner.on(" ").join(MOD.stream().map(m -> lvl * m / 100).map(m -> m > 250 ? 250 : m).map(m -> m < 1 ? 1 : m).distinct().collect(Collectors.toList()));
 
-        return String.format("L <font color=#FFFF00> %d </font>:team %d - %d | PVP %d - %d | %d %s | missions<font color=#66CCFF>%s</font>", lvl, minTeamLevel, maxTeamLevel, minPvpLevel, maxPvpLevel, XP[lvl], lvl < 200 ? "XP" : "SK", mish);
+        return String.format("<font color=#DEDE42> L <font color=#FFFF00> %d </font>:team %d - %d | PVP %d - %d | %d %s | missions<font color=#66CCFF> %s </font></font>", lvl, minTeamLevel, maxTeamLevel, minPvpLevel, maxPvpLevel, XP[lvl], lvl < 200 ? "XP" : "SK", mish);
     }
 
     public static String mish(String level) {
         final int lvl = parse(level, 1, 250);
-        return String.format("QL <font color=#FFFF00> %d </font> missions maybe from these level players (+/- 1): %s", lvl, MISH[lvl]);
+        return String.format("<font color=#DEDE42> QL <font color=#FFFF00> %d </font> missions maybe from these level players (+/- 1):<font color=#66CCFF> %s </font></font>", lvl, MISH[lvl]);
     }
 
     private static int parse(String level, int min, int max) {
