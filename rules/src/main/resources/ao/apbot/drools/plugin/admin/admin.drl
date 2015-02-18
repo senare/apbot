@@ -15,7 +15,7 @@ rule "help"
     when
         pkg : MsgPacket(command matches "help")
     then
-    	session.write(pkg.getReply("Admin commands: CREATE ACTIVE DEACTIVATE SPAWN KILL UPDATE "));
+    	session.write(pkg.getReply("Admin commands: <font color=#FFFF00> create active deactivate spawn kill update </font>"));
 end
 
 rule "Create bot"
@@ -26,7 +26,7 @@ rule "Create bot"
     if(pkg.getNoParams() == 4){
   		session.write(pkg.getReply(manager.newBot(pkg.getParam(2), pkg.getParam(3), pkg.getParam(4), pkg.getParam(1))));
     }else{
-    	session.write(pkg.getReply(" CREATE template name user password "));
+    	session.write(pkg.getReply("<font color=#FFFF00> create </font> template name user password "));
     }
 end
 
@@ -38,7 +38,7 @@ rule "Activate bot"
  	   if(pkg.getNoParams() == 1){
   			session.write(pkg.getReply(manager.active(pkg.getParam(1), true)));
  		}else{
-    		session.write(pkg.getReply(" ACTIVATE name "));
+    		session.write(pkg.getReply("<font color=#FFFF00> activate </font> name "));
     	}
 end
 
@@ -50,7 +50,7 @@ rule "Deactivate bot"
  	   if(pkg.getNoParams() == 1){
 			session.write(pkg.getReply(manager.active(pkg.getParam(1), false)));
  		}else{
-    		session.write(pkg.getReply(" DEACTIVATE name "));
+    		session.write(pkg.getReply("<font color=#FFFF00> deactivate </font> name "));
     	}
 end
 
@@ -62,7 +62,7 @@ rule "Spawn bot"
  	   if(pkg.getNoParams() == 1){
 	  		session.write(pkg.getReply(manager.spawn(pkg.getParam(1))));
 	   }else{
-    		session.write(pkg.getReply(" SPAWN name "));
+    		session.write(pkg.getReply("<font color=#FFFF00> spawn </font> name "));
        }
 end
 
@@ -74,7 +74,7 @@ rule "Kill bot"
  	   if(pkg.getNoParams() == 1){
   			session.write(pkg.getReply(manager.kill(pkg.getParam(1))));
 	   }else{
-    		session.write(pkg.getReply(" KILL name "));
+    		session.write(pkg.getReply("<font color=#FFFF00> kill </font> name "));
        }
 
 end
@@ -87,7 +87,7 @@ rule "Update bot"
  	   if(pkg.getNoParams() == 7 ){
   			session.write(pkg.getReply(manager.update(pkg.getParam(1),pkg.getParam(2),pkg.getParam(5), pkg.getParam(6), pkg.getParam(7), pkg.getParam(4))));
 	   }else{
-    		session.write(pkg.getReply(" UPDATE name user SET template name user password "));
+    		session.write(pkg.getReply("<font color=#FFFF00> update </font> name user <font color=#FFFF00> set </font> template name user password "));
        }
 end
 

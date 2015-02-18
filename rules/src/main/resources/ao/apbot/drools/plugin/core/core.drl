@@ -16,7 +16,7 @@ rule "help"
     when
         pkg : MsgPacket(command matches "help")
     then
-    	session.write(pkg.getReply("Core commands: ECHO TIME MISH LEVEL TITLELEVEL AILEVEL"));
+    	session.write(pkg.getReply("Core commands: <font color=#FFFF00> echo time mish level titlelevel ailevel </font>"));
 end
 
 rule "Auth"
