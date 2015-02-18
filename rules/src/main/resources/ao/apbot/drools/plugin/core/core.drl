@@ -5,6 +5,8 @@ import ao.apbot.codec.*;
 import ao.apbot.pkg.*;
 import ao.apbot.*;
 
+import ao.apbot.drools.plugin.core.Level;
+
 global org.apache.mina.core.session.IoSession session;
 
 dialect  "mvel"
@@ -14,7 +16,7 @@ rule "help"
     when
         pkg : MsgPacket(command matches "help")
     then
-    	session.write(pkg.getReply("Core commands: ECHO TIME "));
+    	session.write(pkg.getReply("Core commands: ECHO TIME MISH LEVEL TITLELEVEL AILEVEL"));
 end
 
 rule "Auth"
@@ -29,8 +31,6 @@ rule "Auth"
     	session.write(pkg.getReply("you are admin"));
 end
 
-
-
 rule "Echo"
 
     when
@@ -39,47 +39,35 @@ rule "Echo"
   		session.write(pkg.getReply(pkg.getMsg()));
 end
 
-rule "test join"
+rule "Level"
 
     when
-        pkg : MsgPacket(command matches "test-join")
+        pkg : MsgPacket(command matches "level")
     then
-  		session.write(new PrivateMessagePacket(45212, "join"));
+  		session.write(pkg.getReply(Level.get(pkg.getParam(1))));
 end
 
-rule "test accept"
+rule "Mish"
 
     when
-        pkg : MsgPacket(command matches "test-accept")
+        pkg : MsgPacket(command matches "mish")
     then
-  		session.write(new PrivateChannelAcceptPacket(45212));
+  		session.write(pkg.getReply(Level.mish(pkg.getParam(1))));
 end
 
-
-rule "test lvl"
+rule "AiLevel"
 
     when
-        pkg : MsgPacket(command matches "test-lvl")
+        pkg : MsgPacket(command matches "ailevel")
     then
-  		session.write(new PrivateMessagePacket(45212, "lvl 200"));
+  		session.write(pkg.getReply(Level.get(pkg.getParam(1))));
 end
 
-
-rule "box"
+rule "TitleLevel"
 
     when
-        pkg : MsgPacket(command matches "test-whois")
+        pkg : MsgPacket(command matches "titlelevel")
     then
-  		session.write(new PrivateMessagePacket(45212, "whois Bobsan"));
+  		session.write(pkg.getReply(Level.get(pkg.getParam(1))));
 end
-
-rule "format"
-    when
-        pkg : MsgPacket(command matches "test-format")
-    then
-		session.write(pkg.getReply("<font color=#DEDE42><font color=#DEDE42>L <font color=#FFFF00>200</font>: team 145-220  |  PvP 159-220  |  80000 SK  |  missions<font color=#66CCFF> 140 150 160 170 180 200 220 240 250</font></font></font>"));
-end
-
-
-
 
