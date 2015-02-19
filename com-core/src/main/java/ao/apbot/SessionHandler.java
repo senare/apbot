@@ -1,6 +1,5 @@
 package ao.apbot;
 
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -17,7 +16,6 @@ import org.kie.api.runtime.KieSession;
 
 import ao.apbot.codec.Fact;
 import ao.apbot.codec.MsgPacket;
-import ao.apbot.codec.TimeFact;
 import ao.apbot.domain.Bot;
 import ao.apbot.pkg.auth.CharacterListPacket;
 import ao.apbot.pkg.auth.LoginErrorPacket;
@@ -103,7 +101,6 @@ public class SessionHandler extends IoHandlerAdapter {
                         ksession.setGlobal(entry.getKey(), entry.getValue());
                     }
 
-                    ksession.insert(new TimeFact(Calendar.getInstance()));
                     ksession.insert(pkg);
                     ksession.fireAllRules();
                     ksession.dispose();
