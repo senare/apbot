@@ -1,11 +1,15 @@
 package ao.apbot.domain;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+
+import ao.apbot.Template;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "user" }))
@@ -20,7 +24,9 @@ public class Bot {
     private String name;
     private String user;
     private String password;
-    private String template;
+
+    @Enumerated(EnumType.STRING)
+    private Template template;
 
     private boolean active = false;
 
@@ -32,7 +38,7 @@ public class Bot {
         this.user = user;
     }
 
-    public Bot(String name, String user, String password, String template) {
+    public Bot(String name, String user, String password, Template template) {
         this.name = name;
         this.user = user;
         this.password = password;
@@ -72,11 +78,11 @@ public class Bot {
         this.password = password;
     }
 
-    public String getTemplate() {
+    public Template getTemplate() {
         return template;
     }
 
-    public void setTemplate(String template) {
+    public void setTemplate(Template template) {
         this.template = template;
     }
 

@@ -1,8 +1,10 @@
-package ao.apbot.drools.plugin.core;
+package ao.apbot.drools.core;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+
+import ao.apbot.drools.core.Level;
 
 public class LevelTest {
 
