@@ -1,4 +1,4 @@
-package ao.apbot.drools.plugin.core;
+package ao.apbot.drools.core;
 
 public class OverEquip {
 

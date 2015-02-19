@@ -1,4 +1,4 @@
-package ao.apbot.drools.plugin.core;
+package ao.apbot.drools.core;
 
 import java.util.List;
 import java.util.stream.Collectors;

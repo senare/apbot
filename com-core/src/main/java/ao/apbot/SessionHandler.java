@@ -35,7 +35,7 @@ public class SessionHandler extends IoHandlerAdapter {
     private String username;
     private String handle;
 
-    private String kbase;
+    private Template template;
 
     private KieContainer kc;
 
@@ -46,7 +46,10 @@ public class SessionHandler extends IoHandlerAdapter {
         this.username = bot.getUser();
         this.password = bot.getPassword();
 
-        this.kbase = bot.getTemplate() + "Session";
+        this.template = bot.getTemplate();
+        if (template == Template.ADMIN) {
+            global.put("manager", aoChatBot);
+        }
 
         KieServices ks = KieServices.Factory.get();
         this.kc = ks.getKieClasspathContainer();
@@ -54,10 +57,6 @@ public class SessionHandler extends IoHandlerAdapter {
         Results results = this.kc.verify();
         for (Message msg : results.getMessages()) {
             LOGGER.info(msg.toString() + "  " + msg.getText());
-        }
-
-        if ("admin".equals(bot.getTemplate())) {
-            global.put("manager", aoChatBot);
         }
     }
 
@@ -97,7 +96,7 @@ public class SessionHandler extends IoHandlerAdapter {
                         }
                     }
 
-                    KieSession ksession = kc.newKieSession(kbase);
+                    KieSession ksession = kc.newKieSession(template.session);
                     ksession.setGlobal("session", session);
 
                     for (Entry<String, Object> entry : global.entrySet()) {

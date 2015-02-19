@@ -1,4 +1,4 @@
-package ao.apbot.drools.plugin.core;
+package ao.apbot.drools.core;
 
 import com.fathzer.soft.javaluator.DoubleEvaluator;
 
