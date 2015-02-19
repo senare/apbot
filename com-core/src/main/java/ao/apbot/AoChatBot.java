@@ -86,11 +86,18 @@ public class AoChatBot implements ProtocolCodecFactory {
                 replay.append(" Template can't be null ");
             }
 
+            Template enumTemplate = Template.ORG;
+            try {
+                enumTemplate = Enum.valueOf(Template.class, template.toUpperCase());
+            } catch (IllegalArgumentException x) {
+                return ("Available templates: <font color=#0000FF> ADMIN ORG PVP PVM </font>");
+            }
+
             if (replay.length() != 0) {
                 LOGGER.error(replay);
                 return replay.toString();
             } else {
-                bm.newBot(name, username, password, template);
+                bm.newBot(name, username, password, enumTemplate);
                 return String.format("Created bot %s ", name);
             }
         } catch (Exception x) {
@@ -123,11 +130,18 @@ public class AoChatBot implements ProtocolCodecFactory {
                 replay.append(" Template can't be null ");
             }
 
+            Template enumTemplate = Template.ORG;
+            try {
+                enumTemplate = Enum.valueOf(Template.class, template.toUpperCase());
+            } catch (IllegalArgumentException x) {
+                return ("Available templates: <font color=#0000FF> ADMIN ORG PVP PVM </font>");
+            }
+
             if (replay.length() != 0) {
                 LOGGER.error(replay);
                 return replay.toString();
             } else {
-                bm.update(currentName, currentUsername, name, username, password, template);
+                bm.update(currentName, currentUsername, name, username, password, enumTemplate);
                 return String.format("Updated %s ", name);
             }
         } catch (Exception x) {
@@ -211,7 +225,7 @@ public class AoChatBot implements ProtocolCodecFactory {
                 }
             }
         } catch (Exception x) {
-            LOGGER.errorf(x, "kill bot failed");
+            LOGGER.errorf(x, "spawn bot failed");
             return replay.toString();
         }
     }

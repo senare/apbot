@@ -15,6 +15,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import ao.apbot.Template;
 import ao.apbot.domain.Bot;
 
 @Stateless
@@ -29,7 +30,7 @@ public class BotManager {
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void newBot(String name, String username, String password, String template) {
+    public void newBot(String name, String username, String password, Template template) {
         entityManager.persist(new Bot(name, username, password, template));
     }
 
@@ -48,7 +49,7 @@ public class BotManager {
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void update(String currentName, String currentUsername, String name, String username, String password, String template) {
+    public void update(String currentName, String currentUsername, String name, String username, String password, Template template) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Bot> query = cb.createQuery(Bot.class);
         Root<Bot> sm = query.from(Bot.class);

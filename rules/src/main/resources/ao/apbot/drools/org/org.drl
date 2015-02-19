@@ -1,42 +1,22 @@
-package ao.apbot.drools.plugin.core
+package ao.apbot.drools.org
 
 import java.util.Calendar;
 import ao.apbot.codec.*;
 import ao.apbot.pkg.*;
 import ao.apbot.*;
 
-import ao.apbot.drools.plugin.core.Level;
+import ao.apbot.drools.core.*;
 
 global org.apache.mina.core.session.IoSession session;
 
 dialect  "mvel"
 
-rule "help"
+rule "Help"
 
     when
         pkg : MsgPacket(command matches "help")
     then
-    	session.write(pkg.getReply("Core commands: <font color=#FFFF00> echo time mish level titlelevel ailevel </font>"));
-end
-
-rule "Auth"
-
-//      Chrisax Id[16728]
-//      Workboy Id[603863]
-//      Doodi Id[683837]
-
-    when
-        pkg : MsgPacket(pkg.getCharacterId()==16728 || pkg.getCharacterId()==603863 || pkg.getCharacterId()==683837)
-    then
-    	session.write(pkg.getReply("you are admin"));
-end
-
-rule "Echo"
-
-    when
-        pkg : MsgPacket(command matches "echo")
-    then
-  		session.write(pkg.getReply(pkg.getMsg()));
+    	session.write(pkg.getReply("Org commands: <font color=#FFFF00> mish level titlelevel ailevel oe calc </font>"));
 end
 
 rule "Level"
@@ -71,3 +51,18 @@ rule "TitleLevel"
   		session.write(pkg.getReply(Level.get(pkg.getParam(1))));
 end
 
+rule "OverEquip"
+
+    when
+        pkg : MsgPacket(command matches "oe")
+    then
+  		session.write(pkg.getReply(OverEquip.get(pkg.getParam(1))));
+end
+
+rule "Calc"
+
+    when
+        pkg : MsgPacket(command matches "calc")
+    then
+        session.write(pkg.getReply(Calc.get(pkg.getParam(1))));
+end
