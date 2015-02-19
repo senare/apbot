@@ -11,7 +11,7 @@ public class SessionHandlerTest {
     @Test
     public void test() {
         // GIVEN
-        Bot bot = new Bot("Karl", "user", "secret", Template.ADMIN);
+        Bot bot = new Bot("Karl", "user", "secret", Template.ADMIN, 234234);
         AoChatBot aoChatBot = null;
         SessionHandler handler = new SessionHandler(bot, aoChatBot);
 
