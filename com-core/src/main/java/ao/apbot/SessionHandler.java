@@ -93,7 +93,7 @@ public class SessionHandler extends IoHandlerAdapter {
                             LOGGER.debugf("Param %s = %s ", i, ((MsgPacket) pkg).getParam(i));
                         }
                     }
-
+                    
                     KieSession ksession = kc.newKieSession(template.session);
                     ksession.setGlobal("session", session);
 

@@ -30,8 +30,8 @@ public class BotManager {
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void newBot(String name, String username, String password, Template template) {
-        entityManager.persist(new Bot(name, username, password, template));
+    public void newBot(String name, String username, String password, Template template, int owner) {
+        entityManager.persist(new Bot(name, username, password, template, owner));
     }
 
     public List<Bot> load(String name) {

@@ -69,7 +69,7 @@ public class AoChatBot implements ProtocolCodecFactory {
         }
     }
 
-    public String newBot(String name, String username, String password, String template) {
+    public String newBot(String name, String username, String password, String template, int owner) {
         StringBuffer replay = new StringBuffer();
         try {
 
@@ -97,7 +97,7 @@ public class AoChatBot implements ProtocolCodecFactory {
                 LOGGER.error(replay);
                 return replay.toString();
             } else {
-                bm.newBot(name, username, password, enumTemplate);
+                bm.newBot(name, username, password, enumTemplate, owner);
                 return String.format("Created bot %s ", name);
             }
         } catch (Exception x) {

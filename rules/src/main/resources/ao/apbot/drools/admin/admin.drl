@@ -24,7 +24,7 @@ rule "Create bot"
         pkg : MsgPacket(command matches "create")
     then
     if(pkg.getNoParams() == 4){
-  		session.write(pkg.getReply(manager.newBot(pkg.getParam(2), pkg.getParam(3), pkg.getParam(4), pkg.getParam(1))));
+  		session.write(pkg.getReply(manager.newBot(pkg.getParam(2), pkg.getParam(3), pkg.getParam(4), pkg.getParam(1), pkg.getCharacterId())));
     }else{
     	session.write(pkg.getReply("<font color=#FFFF00> create </font> template name user password "));
     }
