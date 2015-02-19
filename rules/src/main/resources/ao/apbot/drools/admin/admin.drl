@@ -1,4 +1,4 @@
-package ao.apbot.drools.plugin.admin
+package ao.apbot.drools.admin
 
 import java.util.Calendar;
 import ao.apbot.codec.*;
@@ -10,7 +10,7 @@ global ao.apbot.AoChatBot manager;
 
 dialect  "mvel"
 
-rule "help"
+rule "Help"
 
     when
         pkg : MsgPacket(command matches "help")
@@ -89,5 +89,17 @@ rule "Update bot"
 	   }else{
     		session.write(pkg.getReply("<font color=#FFFF00> update </font> name user <font color=#FFFF00> set </font> template name user password "));
        }
+end
+
+rule "Auth"
+
+//      Chrisax Id[16728]
+//      Workboy Id[603863]
+//      Doodi Id[683837]
+
+    when
+        pkg : MsgPacket(pkg.getCharacterId()==16728 || pkg.getCharacterId()==603863 || pkg.getCharacterId()==683837)
+    then
+        session.write(pkg.getReply("you are admin"));
 end
 
