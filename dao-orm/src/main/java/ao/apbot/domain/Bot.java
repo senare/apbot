@@ -30,6 +30,8 @@ public class Bot {
 
     private boolean active = false;
 
+    private int owner;
+
     public Bot() {
     }
 
@@ -38,12 +40,14 @@ public class Bot {
         this.user = user;
     }
 
-    public Bot(String name, String user, String password, Template template) {
+    public Bot(String name, String user, String password, Template template, int owner) {
         this.name = name;
         this.user = user;
         this.password = password;
         this.template = template;
         this.active = true;
+
+        this.owner = owner;
     }
 
     public String getChatId() {
@@ -92,5 +96,9 @@ public class Bot {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public int getOwner() {
+        return owner;
     }
 }
