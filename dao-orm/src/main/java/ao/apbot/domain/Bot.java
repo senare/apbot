@@ -1,89 +1,104 @@
 package ao.apbot.domain;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+
+import ao.apbot.Template;
 
 @Entity
-@Table
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "user" }))
 public class Bot {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	private String chatId;
-	private String name;
-	private String user;
-	private String password;
-	private String template;
+    private String chatId;
 
-	private boolean active = false;
+    private String name;
+    private String user;
+    private String password;
 
-	public Bot() {
-	}
+    @Enumerated(EnumType.STRING)
+    private Template template;
 
-	public Bot(String name, String user, String password) {
-		this.name = name;
-		this.user = user;
-		this.password = password;
-	}
+    private boolean active = false;
 
-	public Bot(String name, String user, String password, String template) {
-		this.name = name;
-		this.user = user;
-		this.password = password;
-		this.template = template;
-		this.active = true;
-	}
+    private int owner;
 
-	public String getChatId() {
-		return chatId;
-	}
+    public Bot() {
+    }
 
-	public void setChatId(String chatId) {
-		this.chatId = chatId;
-	}
+    public Bot(String name, String user) {
+        this.name = name;
+        this.user = user;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public Bot(String name, String user, String password, Template template, int owner) {
+        this.name = name;
+        this.user = user;
+        this.password = password;
+        this.template = template;
+        this.active = true;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+        this.owner = owner;
+    }
 
-	public String getUser() {
-		return user;
-	}
+    public String getChatId() {
+        return chatId;
+    }
 
-	public void setUser(String user) {
-		this.user = user;
-	}
+    public void setChatId(String chatId) {
+        this.chatId = chatId;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getTemplate() {
-		return template;
-	}
+    public String getUser() {
+        return user;
+    }
 
-	public void setTemplate(String template) {
-		this.template = template;
-	}
+    public void setUser(String user) {
+        this.user = user;
+    }
 
-	public boolean isActive() {
-		return active;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public void setActive(boolean active) {
-		this.active = active;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Template getTemplate() {
+        return template;
+    }
+
+    public void setTemplate(Template template) {
+        this.template = template;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public int getOwner() {
+        return owner;
+    }
 }

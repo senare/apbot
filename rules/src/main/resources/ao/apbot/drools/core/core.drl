@@ -1,4 +1,4 @@
-package apbot
+package ao.apbot.drools.core
 
 import java.util.Calendar;
 import ao.apbot.codec.*;
@@ -9,19 +9,13 @@ global org.apache.mina.core.session.IoSession session;
 
 dialect  "mvel"
 
-rule "Auth"
-
-//      Chrisax Id[16728]
-//      Workboy Id[603863]
-//      Doodi Id[683837]
+rule "Help"
 
     when
-        pkg : MsgPacket(pkg.getCharacterId()==16728 || pkg.getCharacterId()==603863 || pkg.getCharacterId()==683837)
+        pkg : MsgPacket(command matches "help")
     then
-    	session.write(pkg.getReply("you are admin"));
+    	session.write(pkg.getReply("Core commands: <font color=#FFFF00> echo time </font>"));
 end
-
-
 
 rule "Echo"
 
@@ -29,4 +23,12 @@ rule "Echo"
         pkg : MsgPacket(command matches "echo")
     then
   		session.write(pkg.getReply(pkg.getMsg()));
+end
+
+rule "Time command"
+
+    when
+        pkg : MsgPacket(command matches "time")
+    then
+        session.write(pkg.getReply(Time.get()));
 end

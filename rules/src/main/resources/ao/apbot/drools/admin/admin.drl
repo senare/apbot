@@ -1,0 +1,105 @@
+package ao.apbot.drools.admin
+
+import java.util.Calendar;
+import ao.apbot.codec.*;
+import ao.apbot.pkg.*;
+import ao.apbot.*;
+
+global org.apache.mina.core.session.IoSession session;
+global ao.apbot.AoChatBot manager;
+
+dialect  "mvel"
+
+rule "Help"
+
+    when
+        pkg : MsgPacket(command matches "help")
+    then
+    	session.write(pkg.getReply("Admin commands: <font color=#FFFF00> create active deactivate spawn kill update </font>"));
+end
+
+rule "Create bot"
+
+    when
+        pkg : MsgPacket(command matches "create")
+    then
+    if(pkg.getNoParams() == 4){
+  		session.write(pkg.getReply(manager.newBot(pkg.getParam(2), pkg.getParam(3), pkg.getParam(4), pkg.getParam(1), pkg.getCharacterId())));
+    }else{
+    	session.write(pkg.getReply("<font color=#FFFF00> create </font> template name user password "));
+    }
+end
+
+rule "Activate bot"
+
+    when
+        pkg : MsgPacket(command matches "activate")
+    then
+ 	   if(pkg.getNoParams() == 1){
+  			session.write(pkg.getReply(manager.active(pkg.getParam(1), true)));
+ 		}else{
+    		session.write(pkg.getReply("<font color=#FFFF00> activate </font> name "));
+    	}
+end
+
+rule "Deactivate bot"
+
+    when
+        pkg : MsgPacket(command matches "deactivate")
+    then
+ 	   if(pkg.getNoParams() == 1){
+			session.write(pkg.getReply(manager.active(pkg.getParam(1), false)));
+ 		}else{
+    		session.write(pkg.getReply("<font color=#FFFF00> deactivate </font> name "));
+    	}
+end
+
+rule "Spawn bot"
+
+    when
+        pkg : MsgPacket(command matches "spawn")
+    then
+ 	   if(pkg.getNoParams() == 1){
+	  		session.write(pkg.getReply(manager.spawn(pkg.getParam(1))));
+	   }else{
+    		session.write(pkg.getReply("<font color=#FFFF00> spawn </font> name "));
+       }
+end
+
+rule "Kill bot"
+
+    when
+        pkg : MsgPacket(command matches "kill")
+    then
+ 	   if(pkg.getNoParams() == 1){
+  			session.write(pkg.getReply(manager.kill(pkg.getParam(1))));
+	   }else{
+    		session.write(pkg.getReply("<font color=#FFFF00> kill </font> name "));
+       }
+
+end
+
+rule "Update bot"
+
+    when
+        pkg : MsgPacket(command matches "update")
+    then
+ 	   if(pkg.getNoParams() == 7 ){
+  			session.write(pkg.getReply(manager.update(pkg.getParam(1),pkg.getParam(2),pkg.getParam(5), pkg.getParam(6), pkg.getParam(7), pkg.getParam(4))));
+	   }else{
+    		session.write(pkg.getReply("<font color=#FFFF00> update </font> name user <font color=#FFFF00> set </font> template name user password "));
+       }
+end
+
+rule "Auth"
+
+//      Chrisax Id[16728]
+//      Workboy Id[603863]
+//      Doodi Id[683837]
+
+    when
+        pkg : MsgPacket(pkg.getCharacterId()==16728 || pkg.getCharacterId()==603863 || pkg.getCharacterId()==683837)
+    then
+        session.write(pkg.getReply("you are admin"));
+end
+
