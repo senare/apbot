@@ -12,7 +12,7 @@ dialect  "mvel"
 rule "Help"
 
     when
-        pkg : PrivateMessagePacket(command matches "help") || pkg : PrivateChannelMessagePacket(command matches "help") ||
+        pkg : PrivateMessagePacket(command matches "help") || PrivateChannelMessagePacket(command matches "help") ||
     then
     	session.write(pkg.getReply("Core commands: <font color=#FFFF00> echo time </font>"));
 end
@@ -20,7 +20,7 @@ end
 rule "Echo"
 
     when
-        pkg : PrivateMessagePacket(command matches "echo") || pkg : PrivateChannelMessagePacket(command matches "echo")
+        pkg : PrivateMessagePacket(command matches "echo") || PrivateChannelMessagePacket(command matches "echo")
     then
   		session.write(pkg.getReply(pkg.getMsg()));
 end
@@ -28,7 +28,7 @@ end
 rule "Time command"
 
     when
-        pkg : PrivateMessagePacket(command matches "time") || pkg : PrivateChannelMessagePacket(command matches "time") 
+        pkg : PrivateMessagePacket(command matches "time") || PrivateChannelMessagePacket(command matches "time") 
     then
         session.write(pkg.getReply(Time.get()));
 end
