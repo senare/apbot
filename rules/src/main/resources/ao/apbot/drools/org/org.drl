@@ -14,7 +14,7 @@ dialect  "mvel"
 rule "Help"
 
     when
-        pkg : PrivateMessagePacket(command matches "help") || pkg : PrivateChannelMessagePacket(command matches "help") 
+        pkg : PrivateMessagePacket(command matches "help") || PrivateChannelMessagePacket(command matches "help") 
     then
     	session.write(pkg.getReply("Org commands: <font color=#FFFF00> mish level titlelevel ailevel oe calc </font>"));
 end
@@ -22,7 +22,7 @@ end
 rule "Level"
 
     when
-        pkg : PrivateMessagePacket(command matches "level") || pkg : PrivateChannelMessagePacket(command matches "level")
+        pkg : PrivateMessagePacket(command matches "level") || PrivateChannelMessagePacket(command matches "level")
     then
   		session.write(pkg.getReply(Level.get(pkg.getParam(1))));
 end
@@ -30,7 +30,7 @@ end
 rule "Mish"
 
     when
-        pkg : PrivateMessagePacket(command matches "mish") || pkg : PrivateChannelMessagePacket(command matches "mish")
+        pkg : PrivateMessagePacket(command matches "mish") || PrivateChannelMessagePacket(command matches "mish")
     then
   		session.write(pkg.getReply(Level.mish(pkg.getParam(1))));
 end
@@ -38,7 +38,7 @@ end
 rule "AiLevel"
 
     when
-        pkg : PrivateMessagePacket(command matches "ailevel") || pkg : PrivateChannelMessagePacket(command matches "ailevel")
+        pkg : PrivateMessagePacket(command matches "ailevel") || PrivateChannelMessagePacket(command matches "ailevel")
     then
   		session.write(pkg.getReply(Level.get(pkg.getParam(1))));
 end
@@ -46,7 +46,7 @@ end
 rule "TitleLevel"
 
     when
-        pkg : PrivateMessagePacket(command matches "titlelevel") || pkg : PrivateChannelMessagePacket(command matches "titlelevel")
+        pkg : PrivateMessagePacket(command matches "titlelevel") || PrivateChannelMessagePacket(command matches "titlelevel")
     then
   		session.write(pkg.getReply(Level.get(pkg.getParam(1))));
 end
@@ -54,7 +54,7 @@ end
 rule "OverEquip"
 
     when
-        pkg : PrivateMessagePacket(command matches "oe") || pkg : PrivateChannelMessagePacket(command matches "oe")
+        pkg : PrivateMessagePacket(command matches "oe") || PrivateChannelMessagePacket(command matches "oe")
     then
   		session.write(pkg.getReply(OverEquip.get(pkg.getParam(1))));
 end
@@ -62,7 +62,7 @@ end
 rule "Calc"
 
     when
-        pkg : PrivateMessagePacket(command matches "calc") || pkg : PrivateChannelMessagePacket(command matches "calc")
+        pkg : PrivateMessagePacket(command matches "calc") || PrivateChannelMessagePacket(command matches "calc")
     then
         session.write(pkg.getReply(Calc.get(pkg.getParam(1))));
 end
