@@ -19,6 +19,14 @@
  */
 package ao.apbot.domain;
 
+import java.util.List;
+
+import com.google.common.collect.Lists;
+
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -51,12 +59,19 @@ public class Bot {
 
     private int owner;
 
+    @ElementCollection
+    @CollectionTable(name = "bot_admin", joinColumns = @JoinColumn(name = "id"))
+    @Column(name = "admin_id")
+    private List<Integer> admins;
+
     public Bot() {
+        this.admins = Lists.newArrayList();
     }
 
     public Bot(String name, String user) {
         this.name = name;
         this.user = user;
+        this.admins = Lists.newArrayList();
     }
 
     public Bot(String name, String user, String password, Template template, int owner) {
@@ -67,6 +82,7 @@ public class Bot {
         this.active = true;
 
         this.owner = owner;
+        this.admins = Lists.newArrayList();
     }
 
     public String getChatId() {
