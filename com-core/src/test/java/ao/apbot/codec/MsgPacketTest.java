@@ -21,15 +21,18 @@ package ao.apbot.codec;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Ignore;
 import org.junit.Test;
+
+import ao.apbot.pkg.ChannelMessagePacket;
+import ao.apbot.pkg.PrivateChannelMessagePacket;
+import ao.apbot.pkg.PrivateMessagePacket;
 
 public class MsgPacketTest {
 
     @Test
-    public void test() {
+    public void test_PrivateMessagePacket() {
         // GIVEN
-        MsgPacket pkg = testPkg("!karl ove 3445 karlsson");
+        MsgPacket pkg = new PrivateMessagePacket(234, "!karl ove 3445 karlsson");
 
         // WHEN
         String actual = pkg.getCommand();
@@ -42,18 +45,35 @@ public class MsgPacketTest {
         assertEquals("karlsson", pkg.getParam(3));
     }
 
-    @Ignore("Not a test ...")
-    private MsgPacket testPkg(final String msg) {
-        return new MsgPacket((short) 55) {
-            @Override
-            public String getMsg() {
-                return msg;
-            }
+    @Test
+    public void test_PrivateChannelMessagePacket() {
+        // GIVEN
+        MsgPacket pkg = new PrivateChannelMessagePacket(234, "!karl ove 3445 karlsson");
 
-            @Override
-            public int getCharacterId() {
-                return 0;
-            }
-        };
+        // WHEN
+        String actual = pkg.getCommand();
+
+        // THEN
+        assertEquals("karl", actual);
+
+        assertEquals("ove", pkg.getParam(1));
+        assertEquals("3445", pkg.getParam(2));
+        assertEquals("karlsson", pkg.getParam(3));
+    }
+
+    @Test
+    public void test_ChannelMessagePacket() {
+        // GIVEN
+        MsgPacket pkg = new ChannelMessagePacket(new byte[0], "!karl ove 3445 karlsson");
+
+        // WHEN
+        String actual = pkg.getCommand();
+
+        // THEN
+        assertEquals("karl", actual);
+
+        assertEquals("ove", pkg.getParam(1));
+        assertEquals("3445", pkg.getParam(2));
+        assertEquals("karlsson", pkg.getParam(3));
     }
 }

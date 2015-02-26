@@ -23,11 +23,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.google.common.collect.Lists;
+
 import ao.apbot.pkg.ChannelMessagePacket;
 import ao.apbot.pkg.PrivateChannelMessagePacket;
 import ao.apbot.pkg.PrivateMessagePacket;
 
 public abstract class MsgPacket extends Fact {
+
+    protected List<String> allow = Lists.newArrayList("!");
 
     public MsgPacket(short type) {
         super(type);
@@ -56,6 +60,15 @@ public abstract class MsgPacket extends Fact {
     protected void split() {
         params.addAll(Arrays.asList(getMsg().split("\\s+")));
         this.command = params.get(0);
+
+        for (String prefix : allow) {
+            if (this.command.startsWith(prefix)) {
+                this.command = this.command.substring(prefix.length());
+                continue;
+            } else {
+                this.command = "";
+            }
+        }
 
         this.noParams = params.size();
         if (this.noParams > 1) {

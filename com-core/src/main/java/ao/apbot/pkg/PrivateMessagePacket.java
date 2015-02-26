@@ -19,8 +19,6 @@
  */
 package ao.apbot.pkg;
 
-import java.util.Arrays;
-
 import org.apache.mina.core.buffer.IoBuffer;
 
 import ao.apbot.codec.MsgPacket;
@@ -41,8 +39,6 @@ import ao.apbot.codec.MsgPacket;
  * FORMAT: ISS <br>
  * DIRECTION: in/out
  * </p>
- *
- * @author Paul Smith
  */
 public class PrivateMessagePacket extends MsgPacket {
 
@@ -54,10 +50,12 @@ public class PrivateMessagePacket extends MsgPacket {
 
     public PrivateMessagePacket() {
         super(TYPE);
+        this.allow.add("");
     }
 
     public PrivateMessagePacket(int characterId, String msg) {
         super(TYPE);
+        this.allow.add("");
         this.characterId = characterId;
         this.msg = msg;
     }
@@ -74,15 +72,6 @@ public class PrivateMessagePacket extends MsgPacket {
         this.characterId = buff.getInt();
         this.msg = decodeString(buff);
         this.str = decodeString(buff);
-    }
-
-    @Override
-    protected void split() {
-        super.split();
-
-        if (this.command.startsWith("!")) {
-            this.command = this.command.substring(1);
-        }
     }
 
     public int getCharacterId() {
