@@ -1,14 +1,37 @@
+/*
+    Copyright (C) 2015 Senare
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+    contact : aperfectbot@gmail.com
+    
+ */
 package ao.apbot.codec;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.google.common.collect.Lists;
+
 import ao.apbot.pkg.ChannelMessagePacket;
 import ao.apbot.pkg.PrivateChannelMessagePacket;
 import ao.apbot.pkg.PrivateMessagePacket;
 
 public abstract class MsgPacket extends Fact {
+
+    protected List<String> allow = Lists.newArrayList("!");
 
     public MsgPacket(short type) {
         super(type);
@@ -28,18 +51,23 @@ public abstract class MsgPacket extends Fact {
         }
     }
 
-    private String command = null;
+    protected String command = null;
 
     private int noParams = 0;
 
     private List<String> params = new ArrayList<>();
 
-    private void split() {
+    protected void split() {
         params.addAll(Arrays.asList(getMsg().split("\\s+")));
         this.command = params.get(0);
 
-        if (this.command.startsWith("!")) {
-            this.command = this.command.substring(1);
+        for (String prefix : allow) {
+            if (this.command.startsWith(prefix)) {
+                this.command = this.command.substring(prefix.length());
+                continue;
+            } else {
+                this.command = "";
+            }
         }
 
         this.noParams = params.size();

@@ -101,6 +101,6 @@ rule "Auth"
     when
         pkg : PrivateMessagePacket(pkg.getCharacterId()==16728 || pkg.getCharacterId()==603863 || pkg.getCharacterId()==683837)
     then
-        session.write(pkg.getReply("you are admin"));
+//      session.write(pkg.getReply("you are admin"));
 end
 
