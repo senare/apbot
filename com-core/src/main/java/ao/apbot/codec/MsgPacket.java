@@ -59,14 +59,12 @@ public abstract class MsgPacket extends Fact {
 
     protected void split() {
         params.addAll(Arrays.asList(getMsg().split("\\s+")));
-        this.command = params.get(0);
+
+        String pcommand = params.get(0);
 
         for (String prefix : allow) {
-            if (this.command.startsWith(prefix)) {
-                this.command = this.command.substring(prefix.length());
-                continue;
-            } else {
-                this.command = "";
+            if (pcommand.startsWith(prefix)) {
+                this.command = pcommand = pcommand.substring(prefix.length());
             }
         }
 

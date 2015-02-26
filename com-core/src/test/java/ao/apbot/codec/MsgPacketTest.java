@@ -46,6 +46,23 @@ public class MsgPacketTest {
     }
 
     @Test
+    public void test_PrivateMessagePacket_no_prefix() {
+        // GIVEN
+        MsgPacket pkg = new PrivateMessagePacket(234, "karl ove 3445 karlsson");
+
+        // WHEN
+        String actual = pkg.getCommand();
+
+        // THEN
+
+        assertEquals("karl", actual);
+
+        assertEquals("ove", pkg.getParam(1));
+        assertEquals("3445", pkg.getParam(2));
+        assertEquals("karlsson", pkg.getParam(3));
+    }
+
+    @Test
     public void test_PrivateChannelMessagePacket() {
         // GIVEN
         MsgPacket pkg = new PrivateChannelMessagePacket(234, "!karl ove 3445 karlsson");
