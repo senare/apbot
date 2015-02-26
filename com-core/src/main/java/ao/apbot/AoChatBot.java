@@ -252,7 +252,7 @@ public class AoChatBot implements ProtocolCodecFactory {
             NioSocketConnector connector = new NioSocketConnector();
 
             connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(this));
-            connector.setHandler(new FakeSessionHandler(bot, this));
+            connector.setHandler(new SessionHandler(bot, this));
 
             IoSession session;
             for (;;) {

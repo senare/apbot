@@ -13,7 +13,7 @@ dialect  "mvel"
 rule "Help"
 
     when
-        pkg : MsgPacket(command matches "help")
+        pkg : PrivateMessagePacket(command matches "help")
     then
     	session.write(pkg.getReply("Admin commands: <font color=#FFFF00> create active deactivate spawn kill update </font>"));
 end
@@ -21,7 +21,7 @@ end
 rule "Create bot"
 
     when
-        pkg : MsgPacket(command matches "create")
+        pkg : PrivateMessagePacket(command matches "create")
     then
     if(pkg.getNoParams() == 4){
   		session.write(pkg.getReply(manager.newBot(pkg.getParam(2), pkg.getParam(3), pkg.getParam(4), pkg.getParam(1), pkg.getCharacterId())));
@@ -33,7 +33,7 @@ end
 rule "Activate bot"
 
     when
-        pkg : MsgPacket(command matches "activate")
+        pkg : PrivateMessagePacket(command matches "activate")
     then
  	   if(pkg.getNoParams() == 1){
   			session.write(pkg.getReply(manager.active(pkg.getParam(1), true)));
@@ -45,7 +45,7 @@ end
 rule "Deactivate bot"
 
     when
-        pkg : MsgPacket(command matches "deactivate")
+        pkg : PrivateMessagePacket(command matches "deactivate")
     then
  	   if(pkg.getNoParams() == 1){
 			session.write(pkg.getReply(manager.active(pkg.getParam(1), false)));
@@ -57,7 +57,7 @@ end
 rule "Spawn bot"
 
     when
-        pkg : MsgPacket(command matches "spawn")
+        pkg : PrivateMessagePacket(command matches "spawn")
     then
  	   if(pkg.getNoParams() == 1){
 	  		session.write(pkg.getReply(manager.spawn(pkg.getParam(1))));
@@ -69,7 +69,7 @@ end
 rule "Kill bot"
 
     when
-        pkg : MsgPacket(command matches "kill")
+        pkg : PrivateMessagePacket(command matches "kill")
     then
  	   if(pkg.getNoParams() == 1){
   			session.write(pkg.getReply(manager.kill(pkg.getParam(1))));
@@ -82,7 +82,7 @@ end
 rule "Update bot"
 
     when
-        pkg : MsgPacket(command matches "update")
+        pkg : PrivateMessagePacket(command matches "update")
     then
  	   if(pkg.getNoParams() == 7 ){
   			session.write(pkg.getReply(manager.update(pkg.getParam(1),pkg.getParam(2),pkg.getParam(5), pkg.getParam(6), pkg.getParam(7), pkg.getParam(4))));
@@ -93,12 +93,13 @@ end
 
 rule "Auth"
 
+//      ThoughCrat [134572817]
 //      Chrisax Id[16728]
 //      Workboy Id[603863]
 //      Doodi Id[683837]
 
     when
-        pkg : MsgPacket(pkg.getCharacterId()==16728 || pkg.getCharacterId()==603863 || pkg.getCharacterId()==683837)
+        pkg : PrivateMessagePacket(pkg.getCharacterId()==16728 || pkg.getCharacterId()==603863 || pkg.getCharacterId()==683837)
     then
         session.write(pkg.getReply("you are admin"));
 end
