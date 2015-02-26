@@ -47,19 +47,15 @@ public abstract class MsgPacket extends Fact {
         }
     }
 
-    private String command = null;
+    protected String command = null;
 
     private int noParams = 0;
 
     private List<String> params = new ArrayList<>();
 
-    private void split() {
+    protected void split() {
         params.addAll(Arrays.asList(getMsg().split("\\s+")));
         this.command = params.get(0);
-
-        if (this.command.startsWith("!")) {
-            this.command = this.command.substring(1);
-        }
 
         this.noParams = params.size();
         if (this.noParams > 1) {
