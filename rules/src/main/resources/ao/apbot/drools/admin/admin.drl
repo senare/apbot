@@ -85,7 +85,7 @@ rule "Update bot"
         pkg : PrivateMessagePacket(command matches "update")
     then
  	   if(pkg.getNoParams() == 7 ){
-  			session.write(pkg.getReply(manager.update(pkg.getParam(1),pkg.getParam(2),pkg.getParam(5), pkg.getParam(6), pkg.getParam(7), pkg.getParam(4))));
+  			session.write(pkg.getReply(manager.update(pkg.getParam(1),pkg.getParam(2),pkg.getParam(5), pkg.getParam(6), pkg.getParam(7), pkg.getParam(4), pkg.getCharacterId())));
 	   }else{
     		session.write(pkg.getReply("<font color=#FFFF00> update </font> name user <font color=#FFFF00> set </font> template name user password "));
        }
@@ -101,6 +101,6 @@ rule "Auth"
     when
         pkg : PrivateMessagePacket(pkg.getCharacterId()==16728 || pkg.getCharacterId()==603863 || pkg.getCharacterId()==683837)
     then
-        session.write(pkg.getReply("you are admin"));
+//      session.write(pkg.getReply("you are admin"));
 end
 
