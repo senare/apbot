@@ -1,3 +1,22 @@
+/*
+    Copyright (C) 2015 Senare
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+    contact : aperfectbot@gmail.com
+    
+ */
 package ao.apbot.jpa;
 
 import java.util.List;
@@ -49,17 +68,25 @@ public class BotManager {
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void update(String currentName, String currentUsername, String name, String username, String password, Template template) {
+    public boolean update(String currentName, String currentUsername, String name, String username, String password, Template template, int owner) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Bot> query = cb.createQuery(Bot.class);
         Root<Bot> sm = query.from(Bot.class);
         query.where(cb.equal(sm.get("name"), currentName));
         query.where(cb.equal(sm.get("user"), currentUsername));
-        Bot reference = entityManager.createQuery(query).getSingleResult();
-        reference.setName(name);
-        reference.setUser(username);
-        reference.setTemplate(template);
-        reference.setPassword(password);
-        entityManager.merge(reference);
+        query.where(cb.equal(sm.get("owner"), owner));
+
+        List<Bot> resultList = entityManager.createQuery(query).getResultList();
+        if (resultList.size() == 1) {
+            Bot reference = resultList.get(0);
+            reference.setName(name);
+            reference.setUser(username);
+            reference.setTemplate(template);
+            reference.setPassword(password);
+            entityManager.merge(reference);
+            return true;
+        }
+        
+        return false;
     }
 }

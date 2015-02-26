@@ -1,3 +1,22 @@
+/*
+    Copyright (C) 2015 Senare
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+    contact : aperfectbot@gmail.com
+    
+ */
 package ao.apbot;
 
 import java.net.InetSocketAddress;
@@ -106,7 +125,7 @@ public class AoChatBot implements ProtocolCodecFactory {
         }
     }
 
-    public String update(String currentName, String currentUsername, String name, String username, String password, String template) {
+    public String update(String currentName, String currentUsername, String name, String username, String password, String template, int owner) {
         StringBuffer replay = new StringBuffer();
         try {
 
@@ -137,17 +156,19 @@ public class AoChatBot implements ProtocolCodecFactory {
                 return ("Available templates: <font color=#0000FF> ADMIN ORG PVP PVM </font>");
             }
 
-            if (replay.length() != 0) {
-                LOGGER.error(replay);
-                return replay.toString();
-            } else {
-                bm.update(currentName, currentUsername, name, username, password, enumTemplate);
-                return String.format("Updated %s ", name);
+            if (replay.length() == 0) {
+                if (bm.update(currentName, currentUsername, name, username, password, enumTemplate, owner)) {
+                    return String.format("Updated %s ", name);
+                } else {
+                    replay.append(String.format(" You have not created any bot named %s", name));
+                }
             }
         } catch (Exception x) {
             LOGGER.errorf(x, "new bot failed");
-            return replay.toString();
         }
+
+        LOGGER.error(replay);
+        return replay.toString();
     }
 
     public String active(String name, boolean active) {
@@ -252,7 +273,7 @@ public class AoChatBot implements ProtocolCodecFactory {
             NioSocketConnector connector = new NioSocketConnector();
 
             connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(this));
-            connector.setHandler(new FakeSessionHandler(bot, this));
+            connector.setHandler(new SessionHandler(bot, this));
 
             IoSession session;
             for (;;) {
