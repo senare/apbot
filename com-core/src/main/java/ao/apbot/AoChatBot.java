@@ -125,7 +125,7 @@ public class AoChatBot implements ProtocolCodecFactory {
         }
     }
 
-    public String update(String currentName, String currentUsername, String name, String username, String password, String template) {
+    public String update(String currentName, String currentUsername, String name, String username, String password, String template, int owner) {
         StringBuffer replay = new StringBuffer();
         try {
 
@@ -156,17 +156,19 @@ public class AoChatBot implements ProtocolCodecFactory {
                 return ("Available templates: <font color=#0000FF> ADMIN ORG PVP PVM </font>");
             }
 
-            if (replay.length() != 0) {
-                LOGGER.error(replay);
-                return replay.toString();
-            } else {
-                bm.update(currentName, currentUsername, name, username, password, enumTemplate);
-                return String.format("Updated %s ", name);
+            if (replay.length() == 0) {
+                if (bm.update(currentName, currentUsername, name, username, password, enumTemplate, owner)) {
+                    return String.format("Updated %s ", name);
+                } else {
+                    replay.append(String.format(" You have not created any bot named %s", name));
+                }
             }
         } catch (Exception x) {
             LOGGER.errorf(x, "new bot failed");
-            return replay.toString();
         }
+
+        LOGGER.error(replay);
+        return replay.toString();
     }
 
     public String active(String name, boolean active) {
